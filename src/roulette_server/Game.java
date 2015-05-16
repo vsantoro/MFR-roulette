@@ -34,7 +34,7 @@ public class Game
 	// uzorak Unikat (singleton). Pomoæu tog uzorka se lako može
 	// proširiti funkcionalnost da podrži veæi (ali kontrolisan)
 	// broj igara.
-
+    //
 
     // Metoda kojom se prikljucuje nov igrac u igru
 	// Metoda vraæa iznos koji je dodeljen igraèu
