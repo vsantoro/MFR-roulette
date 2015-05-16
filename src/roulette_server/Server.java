@@ -98,6 +98,16 @@ public class Server extends SocketCommunicator implements Runnable {
                     pp.send(CommunicationCommands.RNVP);
             }
 		}
+        else
+        if(message.startsWith(CommunicationCommands.BET)){
+            String[] parts = message.split("\\s+");
+            Integer id = Integer.parseInt(parts[1]);
+            PlayerProxy pp = connectedPlayers.get(id);
+            if (pp != null) {
+                pp.receivedMessage(parts[0] + " " +  parts[2] + " " + parts[3]);
+            }
+
+        }
     }
 
     public void terminate() {
