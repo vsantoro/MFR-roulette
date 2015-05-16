@@ -28,7 +28,6 @@ public class Game
     private double playerStartMoney = 200;
     private Hashtable<Integer, Player> players;
     private Croupier croupier;
-    //krupije
 
 
 
