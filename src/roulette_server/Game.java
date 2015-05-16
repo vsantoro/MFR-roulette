@@ -28,20 +28,23 @@ public class Game
     private double playerStartMoney = 200;
     private Hashtable<Integer, Player> players;
     private Croupier croupier;
-    
-    
-	// Pošto je samo jedna igra predviðena, mogao bi da se koristi
-	// uzorak Unikat (singleton). Pomoæu tog uzorka se lako može
-	// proširiti funkcionalnost da podrži veæi (ali kontrolisan)
+
+	// Poï¿½to je samo jedna igra predviï¿½ena, mogao bi da se koristi
+	// uzorak Unikat (singleton). Pomoï¿½u tog uzorka se lako moï¿½e
+	// proï¿½iriti funkcionalnost da podrï¿½i veï¿½i (ali kontrolisan)
 	// broj igara.
-    
+
+    public void testMetoda1()
+    {
+        //test1
+    }
     
     // Metoda kojom se prikljucuje nov igrac u igru
-	// Metoda vraæa iznos koji je dodeljen igraèu
+	// Metoda vraï¿½a iznos koji je dodeljen igraï¿½u
     public synchronized double newPlayer(PlayerProxy pp)
     {
         Player p = new Player(pp, playerStartMoney, this);
-        // Dodati igraèa u kolekciju igraèa koju pamti Game
+        // Dodati igraï¿½a u kolekciju igraï¿½a koju pamti Game
         //**Jovan
         players.put(new Integer(p.getId()), p);
         //**
@@ -75,7 +78,7 @@ public class Game
 //    {
 //    	
 //    }
-    
+
     public boolean isAcceptingBets()
     {
     	if(croupier.isAcceptingBets()==true)
@@ -89,13 +92,17 @@ public class Game
     	croupier=new Croupier(this);
     }
 
+    public void testMetoda2()
+    {
+        //test2
+    }
     public static void main(String []args) {
         Scanner in = new Scanner(System.in);
         int i = 1;
         try {
             Game g1=new Game();
             Server server = new Server(g1);
-            // Napravi igru i sve što je potrebno da bi se ona pokrenula i odvijala
+            // Napravi igru i sve ï¿½to je potrebno da bi se ona pokrenula i odvijala
         }
         catch (SocketException ex)
         {
