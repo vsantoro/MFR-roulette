@@ -16,7 +16,7 @@ public class CommunicationCommands {
     public static final String WELCOME_MESSAGE = "WELCOME";
     public static final String QUIT_MESSAGE = "QUIT";
     public static final String QUIT_RESPONSE = "BYE";
-    public static final String NOT_CONNECTED = "YOU ARE NOT CONNECTED TO THIS SERVER";
+    public static final String BET = "BET";
     public static final String STATE_REQUEST = "STATE";
     public static final String PYB="PYB";   //place your bets
     public static final String RNVP="RNVP";

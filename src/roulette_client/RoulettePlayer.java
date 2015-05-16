@@ -96,20 +96,62 @@ public class RoulettePlayer implements Runnable{
                 System.out.println("Menu");
                 System.out.println("1. Join Game;");
                 System.out.println("2. Quit Game;");
-                System.out.println("3.State");
-                String selector = in.next();
+                System.out.println("3. State;");
+                System.out.println("4. Place bet;");
+                System.out.println("0. Exit.");
+                int selector = in.nextInt();
                 switch (selector) {
-                    case "join":
+                    case 1:
                         player.connect();
                         player.client.send(CommunicationCommands.JOIN_MESSAGE);
                         break;
-                    case "quit":
+                    case 2:
                         player.client.send(CommunicationCommands.QUIT_MESSAGE + " " + player.playerID);
                         break;
-                    case "state":
+                    case 3:
                         player.client.send(CommunicationCommands.STATE_REQUEST + " " + player.playerID);
                         break;
-                    case "exit":
+                    case 4:
+                        if(player.connected){
+                            double amount;
+                            int bet_selector;
+                            System.out.println("\nBets");
+                            System.out.println("1. Manque;");
+                            System.out.println("2. Passe;");
+                            System.out.println("3. Rouge;");
+                            System.out.println("4. Noir;");
+                            System.out.println("5. Pair;");
+                            System.out.println("6. Impair;");
+                            System.out.println("7. Single;");
+                            System.out.println("8. Column;");
+                            System.out.println("9. Row;");
+                            System.out.println("0. Return to main menu.");
+                            bet_selector = in.nextInt();
+
+                            switch (bet_selector) {
+                                case 7:
+                                    System.out.print("Input a number ranging from 0 to 36 to bet on: ");
+                                    int number = in.nextInt();
+                                    while(number < 0 || number > 36){
+                                        System.out.println("Invalid number!");
+                                        number = in.nextInt();
+                                    }
+
+                                    System.out.println("Input amount: ");
+                                    amount = in.nextDouble();
+                                    while (amount < 0){
+                                        System.out.println("Invalid amount!");
+                                        amount = in.nextDouble();
+                                    }
+                                    player.client.send(CommunicationCommands.BET + " " + player.playerID + " " + "SINGLE" + "_" + number + " " + amount);
+                                    break;
+                                case 0:  default:
+                                    break;
+                            }
+                            break;
+                        }
+                        else break;
+                    case 0:
                         if(player.connected) player.client.send(CommunicationCommands.QUIT_MESSAGE + " " + player.playerID);
                         loop = false;
                         player.terminate();
