@@ -25,7 +25,8 @@ package roulette_client; /**
 public class RoulettePlayer implements Runnable{
     private Thread roulettePlayerThread = new Thread(this);
     private Client client;
-    public int playerID = 0;
+    private int playerID = 0;
+    private boolean connected = false;
 
     public RoulettePlayer(InetAddress address) throws SocketException, IOException {
         client = new Client(address);
@@ -33,12 +34,20 @@ public class RoulettePlayer implements Runnable{
     }
 
     public void run() {
-        while (!roulettePlayerThread.interrupted()) {
+        while (!Thread.interrupted()) {
             try{
+
+                synchronized (this){
+                    while (!connected) { wait();}
+                }
+
                 String message = client.receive();
                 System.out.println("New Message Received!");
                 processMessage(message);
-            } catch (IOException e){ }
+            } catch (IOException e){
+
+            } catch (InterruptedException e){ }
+
         }
     }
 
@@ -68,9 +77,16 @@ public class RoulettePlayer implements Runnable{
         roulettePlayerThread.interrupt();
     }
 
+    private synchronized void halt(){
+        if (connected) connected = false;
+        try{
+            wait();
+        } catch (InterruptedException e){ }
+    }
+
     public static void main(String []args) {
         Scanner in = new Scanner(System.in);
-        RoulettePlayer player;
+        RoulettePlayer player = null;
         try {
             System.out.println("Server ip address: ");
             //player = new RoulettePlayer(InetAddress.getByName(in.next()));
@@ -78,7 +94,6 @@ public class RoulettePlayer implements Runnable{
             boolean loop = true;
             while (loop == true) {
                 System.out.println();
-                System.out.println("Vas id je: " + player.playerID);
                 System.out.println("Menu");
                 System.out.println("1. Join Game;");
                 System.out.println("2. Quit Game;");
@@ -86,14 +101,14 @@ public class RoulettePlayer implements Runnable{
                 String selector = in.next();
                 switch (selector) {
                     case "join":
+                        player.connected = true;
+                        synchronized (player){
+                            player.notifyAll();
+                        }
                         player.client.send(CommunicationCommands.JOIN_MESSAGE);
                         break;
                     case "quit":
                         player.client.send(CommunicationCommands.QUIT_MESSAGE + " " + player.playerID);
-                        System.out.println(player.roulettePlayerThread.isAlive());
-                        player.terminate();
-                        System.out.println(player.roulettePlayerThread.isAlive());
-                        player.client.datagramSocket.close();
                         loop = false;
                         break;
                     case "state":
@@ -108,6 +123,10 @@ public class RoulettePlayer implements Runnable{
             Logger.getLogger(RoulettePlayer.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(RoulettePlayer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if(player != null){
+            player.terminate();
+            player.client.datagramSocket.close();
         }
     }
 }

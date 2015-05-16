@@ -30,18 +30,18 @@ public class Game
     private Croupier croupier;
     
     
-	// Poï¿½to je samo jedna igra predviï¿½ena, mogao bi da se koristi
-	// uzorak Unikat (singleton). Pomoï¿½u tog uzorka se lako moï¿½e
-	// proï¿½iriti funkcionalnost da podrï¿½i veï¿½i (ali kontrolisan)
+	// Po?to je samo jedna igra predvi?ena, mogao bi da se koristi
+	// uzorak Unikat (singleton). Pomo?u tog uzorka se lako mo?e
+	// pro?iriti funkcionalnost da podr?i ve?i (ali kontrolisan)
 	// broj igara.
     
     
     // Metoda kojom se prikljucuje nov igrac u igru
-	// Metoda vraï¿½a iznos koji je dodeljen igraï¿½u
+	// Metoda vraæa iznos koji je dodeljen igraèu
     public synchronized double newPlayer(PlayerProxy pp)
     {
         Player p = new Player(pp, playerStartMoney, this);
-        // Dodati igraï¿½a u kolekciju igraï¿½a koju pamti Game
+        // Dodati igraèa u kolekciju igraèa koju pamti Game
         //**Jovan
         players.put(new Integer(p.getId()), p);
         //**
@@ -100,7 +100,7 @@ public class Game
         try {
             Game g1=new Game();
             Server server = new Server(g1);
-            // Napravi igru i sve ï¿½to je potrebno da bi se ona pokrenula i odvijala
+            // Napravi igru i sve što je potrebno da bi se ona pokrenula i odvijala
         }
         catch (SocketException ex)
         {

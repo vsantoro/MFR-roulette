@@ -51,10 +51,6 @@ public class Server extends SocketCommunicator implements Runnable {
         System.out.println("... game server ended.");
     }
 
-    public void sendmsg(String message, InetAddress clientAddress, int clientPort) throws IOException {
-        send(message, clientAddress, clientPort);
-    }
-
     private void processMessage(String message) throws IOException {
 
         // Bilo bi dobro najpre proveriti da li je poznata komanda.
@@ -83,10 +79,9 @@ public class Server extends SocketCommunicator implements Runnable {
             Integer id = Integer.parseInt(parts[1]);
             PlayerProxy pp = connectedPlayers.get(id);
             if( pp != null ) {
-                System.out.println("LLL");
-                pp.send(message);
+                pp.send(parts[0]);
                 pp.send(CommunicationCommands.QUIT_RESPONSE);
-                connectedPlayers.remove(pp);
+                connectedPlayers.remove(id);
             }
         }
         else 
