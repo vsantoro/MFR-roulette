@@ -8,6 +8,7 @@ package roulette_client;
 
         import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
+        import javax.net.ssl.SSLContext;
         import java.io.IOException;
         import java.net.InetAddress;
         import java.net.SocketException;
@@ -25,27 +26,24 @@ public class RoulettePlayer implements Runnable{
     private Thread roulettePlayerThread = new Thread(this);
     private Client client;
     private int playerID = 0;
-    private boolean connected = false;
+    private volatile boolean connected = false;
 
-    public RoulettePlayer(InetAddress address) throws SocketException, IOException {
+    public RoulettePlayer(InetAddress address) throws IOException {
         client = new Client(address);
         roulettePlayerThread.start();
     }
 
     public void run() {
-        while (!Thread.interrupted()) {
-            try{
-
-                synchronized (this){
-                    while (!connected) { wait();}
-                }
-
+        try{
+            while (!roulettePlayerThread.interrupted()) {
+                synchronized (this) { while (!connected)  wait(); }
                 String message = client.receive();
                 processMessage(message);
-            } catch (IOException e){
+            }
+        } catch (IOException e){
 
-            } catch (InterruptedException e){ }
-
+        } catch (InterruptedException e){
+            //roulettePlayerThread.interrupt();
         }
     }
 
@@ -77,20 +75,20 @@ public class RoulettePlayer implements Runnable{
         notifyAll();
     }
 
-    private void terminate() {
-        roulettePlayerThread.interrupt();
-    }
-
     private synchronized void disconnect(){
         if (connected) connected = false;
     }
 
+    private void terminate() {
+        roulettePlayerThread.interrupt();
+    }
+
+
+
     public static void main(String []args) {
         Scanner in = new Scanner(System.in);
-        RoulettePlayer player = null;
+        RoulettePlayer player;
         try {
-            System.out.println("Server ip address: ");
-            //player = new RoulettePlayer(InetAddress.getByName(in.next()));
             player = new RoulettePlayer(InetAddress.getByName("localhost"));
             boolean loop = true;
             while (loop) {
@@ -111,6 +109,12 @@ public class RoulettePlayer implements Runnable{
                     case "state":
                         player.client.send(CommunicationCommands.STATE_REQUEST + " " + player.playerID);
                         break;
+                    case "exit":
+                        if(player.connected) player.client.send(CommunicationCommands.QUIT_MESSAGE + " " + player.playerID);
+                        loop = false;
+                        player.terminate();
+                        player.client.datagramSocket.close();
+                        break;
                 }
             }
         } catch (SocketException ex) {
@@ -119,10 +123,6 @@ public class RoulettePlayer implements Runnable{
             Logger.getLogger(RoulettePlayer.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(RoulettePlayer.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        if(player != null){
-            player.terminate();
-            player.client.datagramSocket.close();
         }
     }
 }
