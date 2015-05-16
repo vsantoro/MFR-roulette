@@ -28,18 +28,13 @@ public class Game
     private double playerStartMoney = 200;
     private Hashtable<Integer, Player> players;
     private Croupier croupier;
-
-
-
+    
+    
 	// Po�to je samo jedna igra predvi�ena, mogao bi da se koristi
 	// uzorak Unikat (singleton). Pomo�u tog uzorka se lako mo�e
 	// pro�iriti funkcionalnost da podr�i ve�i (ali kontrolisan)
 	// broj igara.
-
-    public void testMetoda1()
-    {
-        //test1
-    }
+    
     
     // Metoda kojom se prikljucuje nov igrac u igru
 	// Metoda vra�a iznos koji je dodeljen igra�u
@@ -52,7 +47,7 @@ public class Game
         //**
         return playerStartMoney;
     }
-
+    
     // Metoda koja sluzi za "broadcast" - slanje poruke svim igracima
     public void sendMessageToAllPlayers(String message)
     {
@@ -63,10 +58,10 @@ public class Game
             p.reportMessage(message);
         }
     }
-
+    
     public synchronized void deletePlayer(int playerId)
     {
-    	//Ako je pocela partija ne sme da se izbaci igrac. Dodaj to kao
+    	//Ako je pocela partija ne sme da se izbaci igrac. Dodaj to kao 
     	//uslov kada regulises croupiera , i odluci gde bi trebalo da stoji
     	//(u croupier ili u igri)
     	players.remove(playerId);
@@ -94,10 +89,6 @@ public class Game
     	croupier=new Croupier(this);
     }
 
-    public void testMetoda2()
-    {
-        //test2
-    }
     public static void main(String []args) {
         Scanner in = new Scanner(System.in);
         int i = 1;
