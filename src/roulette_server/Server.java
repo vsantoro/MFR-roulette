@@ -84,7 +84,7 @@ public class Server extends SocketCommunicator implements Runnable {
                 connectedPlayers.remove(id);
             }
         }
-        else 
+        else
         if (message.startsWith(CommunicationCommands.STATE_REQUEST))    //**Jovan-Pretpostavljam da se i state unosi kao "STATE" + ID
 		{
         	String[] parts=message.split("\\s+");

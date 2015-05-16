@@ -1,6 +1,5 @@
-package roulette_client; /**
- * Created by Dragan Obradovic on 15-May-15.
- */
+package roulette_client;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -42,7 +41,6 @@ public class RoulettePlayer implements Runnable{
                 }
 
                 String message = client.receive();
-                System.out.println("New Message Received!");
                 processMessage(message);
             } catch (IOException e){
 
@@ -53,35 +51,38 @@ public class RoulettePlayer implements Runnable{
 
     private void processMessage(String message) throws IOException{
         if(message.startsWith(CommunicationCommands.WELCOME_MESSAGE)){
-            String msg = message;
             String []parts = message.split("\\s+");
             playerID = Integer.parseInt(parts[1]);
 
-            System.out.println(msg);
+            System.out.println("\nSERVER: " + message);
         }
         else
         if(message.equals(CommunicationCommands.PYB)){
-            System.out.println("PYB");
+            System.out.println("\nSERVER: " + "PYB");
         }
         else
         if(message.equals(CommunicationCommands.RNVP)){
-            System.out.println("RNVP");
+            System.out.println("\nSERVER: " + message);
         }
+        else
         if(message.startsWith(CommunicationCommands.QUIT_RESPONSE)){
-            System.out.println(message);
-            terminate();
+            System.out.println("\nSERVER: " + message);
+            disconnect();
+            playerID = 0;
         }
+    }
+
+    private synchronized void connect(){
+        if(!connected) connected = true;
+        notifyAll();
     }
 
     private void terminate() {
         roulettePlayerThread.interrupt();
     }
 
-    private synchronized void halt(){
+    private synchronized void disconnect(){
         if (connected) connected = false;
-        try{
-            wait();
-        } catch (InterruptedException e){ }
     }
 
     public static void main(String []args) {
@@ -92,7 +93,7 @@ public class RoulettePlayer implements Runnable{
             //player = new RoulettePlayer(InetAddress.getByName(in.next()));
             player = new RoulettePlayer(InetAddress.getByName("localhost"));
             boolean loop = true;
-            while (loop == true) {
+            while (loop) {
                 System.out.println();
                 System.out.println("Menu");
                 System.out.println("1. Join Game;");
@@ -101,20 +102,15 @@ public class RoulettePlayer implements Runnable{
                 String selector = in.next();
                 switch (selector) {
                     case "join":
-                        player.connected = true;
-                        synchronized (player){
-                            player.notifyAll();
-                        }
+                        player.connect();
                         player.client.send(CommunicationCommands.JOIN_MESSAGE);
                         break;
                     case "quit":
                         player.client.send(CommunicationCommands.QUIT_MESSAGE + " " + player.playerID);
-                        loop = false;
                         break;
                     case "state":
                         player.client.send(CommunicationCommands.STATE_REQUEST + " " + player.playerID);
                         break;
-
                 }
             }
         } catch (SocketException ex) {
