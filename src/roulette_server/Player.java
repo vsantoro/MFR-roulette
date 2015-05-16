@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 //import roulette.communication.PlayerProxy;
+import common.Bet;
+import common.Bets;
 
 /**
  *
@@ -97,6 +99,11 @@ public class Player implements Runnable
     	{
     		quitGame();
     	}
+        else
+        if(message.startsWith("BET"))
+        {
+
+        }
     }
     
     public int getId()
