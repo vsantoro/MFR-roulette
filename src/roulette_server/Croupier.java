@@ -26,8 +26,8 @@ public class Croupier implements Runnable
     	while (true)
     	{
 	        acceptingBets=true;
-	        game.sendMessageToAllPlayers(CommunicationCommands.PYB);
-	        System.out.println("Krupje poceo!");
+            game.sendMessageToAllPlayers(CommunicationCommands.PYB);
+            System.out.println("Krupje poceo!");
 	        try
 	        {
 	        	Thread.sleep(15000);

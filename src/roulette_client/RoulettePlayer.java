@@ -43,10 +43,11 @@ public class RoulettePlayer implements Runnable{
     }
 
     private void processMessage(String message) throws IOException{
-        if(message.startsWith("bajaga")){
+        if(message.startsWith(CommunicationCommands.WELCOME_MESSAGE)){
             String msg = message;
             String []parts = message.split("\\s+");
             playerID = Integer.parseInt(parts[1]);
+
             System.out.println(msg);
         }
         else
@@ -81,10 +82,11 @@ public class RoulettePlayer implements Runnable{
                 System.out.println("Menu");
                 System.out.println("1. Join Game;");
                 System.out.println("2. Quit Game;");
+                System.out.println("3.State");
                 String selector = in.next();
                 switch (selector) {
                     case "join":
-                        player.client.send("Ojsa");
+                        player.client.send(CommunicationCommands.JOIN_MESSAGE);
                         break;
                     case "quit":
                         player.client.send(CommunicationCommands.QUIT_MESSAGE + " " + player.playerID);
@@ -94,6 +96,10 @@ public class RoulettePlayer implements Runnable{
                         player.client.datagramSocket.close();
                         loop = false;
                         break;
+                    case "state":
+                        player.client.send(CommunicationCommands.STATE_REQUEST + " " + player.playerID);
+                        break;
+
                 }
             }
         } catch (SocketException ex) {

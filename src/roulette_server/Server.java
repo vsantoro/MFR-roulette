@@ -70,12 +70,12 @@ public class Server extends SocketCommunicator implements Runnable {
         // if( playerCommands.containCommandStartingWith(message) )
         // { ... izdvoj ID igraca, obradi ostatak komande ... }
 
-        if( message.equals("Ojsa") ) {
+        if( message.equals(CommunicationCommands.JOIN_MESSAGE) ) {
             PlayerProxy pp = new PlayerProxy(this, receivePacket.getAddress(), receivePacket.getPort());
             clientID++;
             connectedPlayers.put(clientID, pp);
             double playerStartMoney = game.newPlayer(pp);
-            pp.send("bajaga" + " " + clientID);
+            pp.send(CommunicationCommands.WELCOME_MESSAGE + " " + clientID + " "+ game.getStartingMoney());
         }
         else
         if( message.startsWith(CommunicationCommands.QUIT_MESSAGE) ) {
@@ -90,9 +90,18 @@ public class Server extends SocketCommunicator implements Runnable {
             }
         }
         else 
-        if (message.equals(CommunicationCommands.STATE_REQUEST))
+        if (message.startsWith(CommunicationCommands.STATE_REQUEST))    //**Jovan-Pretpostavljam da se i state unosi kao "STATE" + ID
 		{
-        	
+        	String[] parts=message.split("\\s+");
+            Integer id=Integer.parseInt(parts[1]);
+            PlayerProxy pp= connectedPlayers.get(id);
+            if( pp != null )
+            {
+                if(game.isAcceptingBets()==true)
+                    pp.send(CommunicationCommands.PYB);
+                else
+                    pp.send(CommunicationCommands.RNVP);
+            }
 		}
     }
 

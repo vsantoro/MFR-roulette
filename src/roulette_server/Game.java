@@ -83,6 +83,11 @@ public class Game
     	else 
     		return false;
     }
+
+    public double getStartingMoney()
+    {
+        return playerStartMoney;
+    }
     public Game()
     {
     	players=new Hashtable<Integer, Player>();
