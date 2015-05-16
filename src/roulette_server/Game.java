@@ -23,19 +23,19 @@ import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
  *
  * @author POOP
  */
-public class Game 
+public class Game
 {
     private double playerStartMoney = 200;
     private Hashtable<Integer, Player> players;
     private Croupier croupier;
-    
-    
+
+
 	// Pošto je samo jedna igra predviðena, mogao bi da se koristi
 	// uzorak Unikat (singleton). Pomoæu tog uzorka se lako može
 	// proširiti funkcionalnost da podrži veæi (ali kontrolisan)
 	// broj igara.
-    
-    
+
+
     // Metoda kojom se prikljucuje nov igrac u igru
 	// Metoda vraæa iznos koji je dodeljen igraèu
     public synchronized double newPlayer(PlayerProxy pp)
@@ -47,7 +47,7 @@ public class Game
         //**
         return playerStartMoney;
     }
-    
+
     // Metoda koja sluzi za "broadcast" - slanje poruke svim igracima
     public void sendMessageToAllPlayers(String message)
     {
@@ -58,10 +58,10 @@ public class Game
             p.reportMessage(message);
         }
     }
-    
+
     public synchronized void deletePlayer(int playerId)
     {
-    	//Ako je pocela partija ne sme da se izbaci igrac. Dodaj to kao 
+    	//Ako je pocela partija ne sme da se izbaci igrac. Dodaj to kao
     	//uslov kada regulises croupiera , i odluci gde bi trebalo da stoji
     	//(u croupier ili u igri)
     	players.remove(playerId);
@@ -75,12 +75,12 @@ public class Game
 //    {
 //    	
 //    }
-    
+
     public boolean isAcceptingBets()
     {
     	if(croupier.isAcceptingBets()==true)
     		return true;
-    	else 
+    	else
     		return false;
     }
     public Game()
@@ -95,13 +95,13 @@ public class Game
         try {
             Game g1=new Game();
             Server server = new Server(g1);
-            // Napravi igru i sve što je potrebno da bi se ona pokrenula i odvijala
+
         }
         catch (SocketException ex)
         {
             Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
         }
-    	
+
 
     	System.out.println("Nesto");
         while(i == 1){
