@@ -126,7 +126,9 @@ public class RoulettePlayer implements Runnable{
     public static void main(String []args) {
         Scanner in = new Scanner(System.in);
         try {
-            RoulettePlayer  player = new RoulettePlayer(InetAddress.getByName("localhost"));
+            System.out.println("Input server address: ");
+            String address = in.next();
+            RoulettePlayer  player = new RoulettePlayer(InetAddress.getByName(address));
             Menu menu = new Menu(player);
             boolean loop = true;
             while (loop){
