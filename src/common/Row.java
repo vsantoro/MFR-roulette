@@ -18,7 +18,7 @@ public class Row extends Bet {
         if(number != 0 && Math.ceil(number / 3) == row){
             return (amount * 36) / 3;
         }
-        return -amount;
+        return 0;
     }
 
     @Override

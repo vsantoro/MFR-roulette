@@ -27,6 +27,7 @@ public class Menu {
         mainMenu.add(mainMenu.size() + 1 + ". " + "Quit Game;");
         mainMenu.add(mainMenu.size() + 1 + ". " + "State;");
         mainMenu.add(mainMenu.size() + 1 + ". " + "Place Bet;");
+        mainMenu.add(mainMenu.size() + 1 + ". " + "Balance;");
         mainMenu.add(mainMenu.size() + 1 + ". " + "Exit.");
 
         betsMenu.add(betsMenu.size() + 1 + ". " + "Manque;");

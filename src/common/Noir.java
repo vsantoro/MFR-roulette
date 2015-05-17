@@ -10,7 +10,7 @@ public class Noir extends Bet {
         if(!isRouge(number)){
             return (amount * 36) / 18;
         }
-        return -amount;
+        return 0;
     }
 
     public String toString() {

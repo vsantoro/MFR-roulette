@@ -10,7 +10,7 @@ public class Pair extends Bet {
         if(number != 0 && number%2 == 0){
             return (amount * 36) / 18;
         }
-        return -amount;
+        return 0;
     }
 
     public String toString() {

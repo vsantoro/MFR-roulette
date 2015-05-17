@@ -15,7 +15,7 @@ public class Column extends Bet{
         if(number != 0 && number % 3 == column){
             return (amount * 36) / 12;
         }
-        return -amount;
+        return 0;
     }
 
     @Override
