@@ -6,6 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.io.IOException;
 import java.util.ArrayList;
+import common.CommunicationCommands;
 
 class InvalidIndexException extends Exception{
     public String toString() {

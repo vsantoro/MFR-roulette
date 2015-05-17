@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package roulette_server;
+package common;
 
 /**
  *
