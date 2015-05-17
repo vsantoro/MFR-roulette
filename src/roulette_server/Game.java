@@ -102,9 +102,9 @@ public class Game
         croupier.addNewBet(playerId,newBet);
     }
 
-    public synchronized void spinTable()
+    public synchronized void spinTable(double speed)
     {
-        table.spinWheel();
+        table.spinWheel(speed);
     }
 
     public int getWinningNumber()

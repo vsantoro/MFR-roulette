@@ -28,6 +28,7 @@ public class Croupier implements Runnable
     private volatile boolean wheelStoppedSpinning;
 
     private Hashtable<Integer,LinkedList<Bet>> bets;
+    private Double[] rotationSpeeds;
     public void run()
     {
         try
@@ -43,7 +44,8 @@ public class Croupier implements Runnable
                 System.out.println("Krupje zavrsio!");
                 acceptingBets=false;
                 game.sendMessageToAllPlayers(CommunicationCommands.RNVP);
-                game.spinTable();
+                double newSpeed=rotationSpeeds[(int)(Math.random()*5)];
+                game.spinTable(newSpeed);
                 synchronized (this)
                 {
                     while(!wheelStoppedSpinning)
@@ -65,7 +67,14 @@ public class Croupier implements Runnable
     	croupierThread=new Thread(this);
         wheelStoppedSpinning=false;
         bets=new Hashtable<Integer,LinkedList<Bet>>();
-    	croupierThread.start();
+        rotationSpeeds=new Double[5];
+        rotationSpeeds[0]=100.0;
+        rotationSpeeds[1]=200.0;
+        rotationSpeeds[2]=300.0;
+        rotationSpeeds[3]=400.0;
+        rotationSpeeds[4]=500.0;
+
+        croupierThread.start();
     }
     
     public boolean isAcceptingBets()
