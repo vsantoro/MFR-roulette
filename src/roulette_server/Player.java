@@ -140,7 +140,10 @@ public class Player implements Runnable
         {
             try
             {
-                playerProxy.send(CommunicationCommands.BALANCE +" "+ money);
+                synchronized (this)
+                {
+                     playerProxy.send(CommunicationCommands.BALANCE +" "+ money);
+                }
             }
             catch(IOException e){}
         }
