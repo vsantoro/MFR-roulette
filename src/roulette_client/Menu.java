@@ -1,5 +1,6 @@
 package roulette_client;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -64,37 +65,37 @@ public class Menu {
         if(0 > index || index > mainMenu.size()) throw new InvalidIndexException();
         String []parts = (mainMenu.get(index - 1)).split(" ", 2);
         try{
-            if(parts[1].equals("Join Game;")){
-                if(player.getID() == 0){
-                    player.connect();
-                    player.getClient().send(CommunicationCommands.JOIN_MESSAGE);
+            switch (parts[1]) {
+                case "Join Game;":
+                    if(player.getID() == 0){
+                        player.connect();
+                        player.getClient().send(CommunicationCommands.JOIN_MESSAGE);
+                        return true;
+                    }
                     return true;
-                }
-                return true;
-            }
-            else
-            if(parts[1].equals("Quit Game;")){
-                player.getClient().send(CommunicationCommands.QUIT_MESSAGE + " " + player.getID());
-                return true;
-            }
-            else
-            if(parts[1].equals("State;")){
-                player.getClient().send(CommunicationCommands.STATE_REQUEST + " " + player.getID());
-                return true;
-            }
-            else
-            if(parts[1].equals("Place Bet;")){
-                displayBetsMenu();
-                int _index = in.nextInt();
-                handleBetsInput(_index);
-                return true;
-            }
-            else
-            if(parts[1].equals("Exit.")){
-                if(player.isConnected()) player.getClient().send(CommunicationCommands.QUIT_MESSAGE + " " + player.getID());
-                player.terminate();
-                player.getClient().datagramSocket.close();
-                return false;
+
+                case "Quit Game;":
+                    player.getClient().send(CommunicationCommands.QUIT_MESSAGE + " " + player.getID());
+                    return true;
+
+                case "State;":
+                    player.getClient().send(CommunicationCommands.STATE_REQUEST + " " + player.getID());
+                    return true;
+
+                case "Place Bet;":
+                    displayBetsMenu();
+                    int _index = in.nextInt();
+                    handleBetsInput(_index);
+                    return true;
+
+                case "Exit.":
+                    if(player.isConnected()) player.getClient().send(CommunicationCommands.QUIT_MESSAGE + " " + player.getID());
+                    player.terminate();
+                    player.getClient().datagramSocket.close();
+                    return false;
+
+                default:
+                    return true;
             }
         } catch (IOException ex){
             Logger.getLogger(RoulettePlayer.class.getName()).log(Level.SEVERE, null, ex);
@@ -104,42 +105,128 @@ public class Menu {
 
     public void handleBetsInput(int index) throws InvalidIndexException {
         if(0 > index || index > betsMenu.size()) throw new InvalidIndexException();
+        double amount;
         String []parts = (betsMenu.get(index - 1)).split(" ", 2);
         try{
-            if(parts[1].equals("Manque;")){}
-            else
-            if(parts[1].equals("Passe;")){}
-            else
-            if(parts[1].equals("Rouge;")){}
-            else
-            if(parts[1].equals("Noir;")){}
-            else
-            if(parts[1].equals("Impair;")){}
-            else
-            if(parts[1].equals("Single;")){
-                System.out.print("Input a number ranging from 0 to 36 to bet on: ");
-                int number = in.nextInt();
-                while(number < 0 || number > 36){
-                    System.out.println("Invalid number!");
-                    number = in.nextInt();
-                }
-
-                System.out.println("Input amount: ");
-                double amount = in.nextDouble();
-                while (amount < 0){
-                    System.out.println("Invalid amount!");
+            switch (parts[1]){
+                case "Manque;":
+                    System.out.print("Input amount: ");
                     amount = in.nextDouble();
-                }
-                player.getClient().send(CommunicationCommands.BET + " " + player.getID() + " " + "SINGLE" + "_" + number + " " + amount);
-            }
-            if(parts[1].equals("Column;")){}
-            if(parts[1].equals("Row;")){}
-            if(parts[1].equals("Return to main menu;")){
+                    while (amount < 0){
+                        System.out.print("Invalid amount!\nInput amount:");
+                        amount = in.nextDouble();
+                    }
+                    player.getClient().send(CommunicationCommands.BET + " " + player.getID() + " " + "MANQUE" + " " + amount);
+                    break;
 
-            }
+                case "Passe;":
+                    System.out.print("Input amount: ");
+                    amount = in.nextDouble();
+                    while (amount < 0){
+                        System.out.print("Invalid amount!\nInput amount:");
+                        amount = in.nextDouble();
+                    }
+                    player.getClient().send(CommunicationCommands.BET + " " + player.getID() + " " + "PASSE" + " " + amount);
+                    break;
 
+                case "Rouge;":
+                    System.out.print("Input amount: ");
+                    amount = in.nextDouble();
+                    while (amount < 0){
+                        System.out.print("Invalid amount!\nInput amount:");
+                        amount = in.nextDouble();
+                    }
+                    player.getClient().send(CommunicationCommands.BET + " " + player.getID() + " " + "ROUGE" + " " + amount);
+                    break;
+
+                case "Noir;":
+                    System.out.print("Input amount: ");
+                    amount = in.nextDouble();
+                    while (amount < 0){
+                        System.out.print("Invalid amount!\nInput amount:");
+                        amount = in.nextDouble();
+                    }
+                    player.getClient().send(CommunicationCommands.BET + " " + player.getID() + " " + "NOIR" + " " + amount);
+                    break;
+
+                case "Pair;":
+                    System.out.print("Input amount: ");
+                    amount = in.nextDouble();
+                    while (amount < 0){
+                        System.out.print("Invalid amount!\nInput amount:");
+                        amount = in.nextDouble();
+                    }
+                    player.getClient().send(CommunicationCommands.BET + " " + player.getID() + " " + "PAIR" + " " + amount);
+                    break;
+
+                case "Impair;":
+                    System.out.print("Input amount: ");
+                    amount = in.nextDouble();
+                    while (amount < 0){
+                        System.out.print("Invalid amount!\nInput amount:");
+                        amount = in.nextDouble();
+                    }
+                    player.getClient().send(CommunicationCommands.BET + " " + player.getID() + " " + "IMPAIR" + " " + amount);
+                    break;
+
+                case "Single;":
+                    System.out.print("Which number from 0 to 36 would you like to bet on: ");
+                    int number = in.nextInt();
+                    while(number < 0 || number > 36){
+                        System.out.print("Invalid number!\nWhich number from 0 to 36 would you like to bet on: ");
+                        number = in.nextInt();
+                    }
+
+                    System.out.print("Input amount: ");
+                    amount = in.nextDouble();
+                    while (amount < 0){
+                        System.out.print("Invalid amount!\nInput amount:");
+                        amount = in.nextDouble();
+                    }
+
+                    player.getClient().send(CommunicationCommands.BET + " " + player.getID() + " " + "SINGLE" + "_" + number + " " + amount);
+                    break;
+
+                case "Column;":
+                    System.out.print("Which column (1st, 2nd or 3rd) would you like to bet on: ");
+                    number = in.nextInt();
+                    while(number < 1 || number > 3){
+                        System.out.print("Invalid number!\nWhich column (1st, 2nd or 3rd) would you like to bet on: ");
+                        number = in.nextInt();
+                    }
+
+                    System.out.print("Input amount: ");
+                    amount = in.nextDouble();
+                    while (amount < 0){
+                        System.out.print("Invalid amount!\nInput amount:");
+                        amount = in.nextDouble();
+                    }
+                    player.getClient().send(CommunicationCommands.BET + " " + player.getID() + " " + "COLUMN" + "_" + number + " " + amount);
+                    break;
+
+                case "Row;":
+                    System.out.print("Which of 12 rows would you like to bet on: ");
+                    number = in.nextInt();
+                    while(number < 1 || number > 12){
+                        System.out.print("Invalid number!\nWhich of 12 rows would you like to bet on: ");
+                        number = in.nextInt();
+                    }
+
+                    System.out.print("Input amount: ");
+                    amount = in.nextDouble();
+                    while (amount < 0){
+                        System.out.print("Invalid amount!\nInput amount:");
+                        amount = in.nextDouble();
+                    }
+                    player.getClient().send(CommunicationCommands.BET + " " + player.getID() + " " + "ROW" + "_" + number + " " + amount);
+                    break;
+                case "Return to main menu.": default:
+                    break;
+            }
         } catch (IOException ex){
             Logger.getLogger(RoulettePlayer.class.getName()).log(Level.SEVERE, null, ex);
+        }  catch (InputMismatchException ex){
+            System.out.println("Niste uneli broj!");
         }
     }
 }

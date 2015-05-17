@@ -29,7 +29,6 @@ public class Single extends Bet implements Cloneable
 
     public Single clone()
     {
-        Single s=(Single)super.clone();
-        return s;
+        return (Single)super.clone();
     }
 }

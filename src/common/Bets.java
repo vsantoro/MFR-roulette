@@ -21,10 +21,15 @@ public class Bets
 	private Bets() { }
 
     static {
-//        bets.add( new Manque() );
-//        bets.add( new Passe() );
-//        bets.add( new Rouge() );
+        bets.add( new Manque() );
+        bets.add( new Passe() );
+        bets.add( new Rouge() );
+        bets.add(new Noir());
+        bets.add(new Pair());
+        bets.add(new Impair());
         bets.add(new Single());
+        bets.add(new Column());
+        bets.add(new Row());
     }
 
     public static Bet decodeBet(String str)
@@ -55,10 +60,13 @@ public class Bets
                     else
                     if(parts[0].equals("COLUMN"))
                     {
+                        ((Column)bb).setColumn(Integer.parseInt(parts[1]));
                         //****Dodati odgovarajuca polja
                     }
                     else
+                    if(parts[0].equals("ROW"))
                     {
+                        ((Row)bb).setRow(Integer.parseInt(parts[1]));
                         //****Dodati odgovarajuca polja
                     }
                     return bb;
