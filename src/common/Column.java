@@ -12,7 +12,7 @@ public class Column extends Bet{
     }
 
     public double winning(int number) {
-        if(number % 3 == column){
+        if(number != 0 && number % 3 == column){
             return (amount * 36) / 12;
         }
         return -amount;

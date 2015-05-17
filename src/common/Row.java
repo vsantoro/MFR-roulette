@@ -15,7 +15,7 @@ public class Row extends Bet {
     }
 
     public double winning(int number) {
-        if(Math.ceil(number / 3) == row){
+        if(number != 0 && Math.ceil(number / 3) == row){
             return (amount * 36) / 3;
         }
         return -amount;
