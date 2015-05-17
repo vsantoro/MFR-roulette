@@ -1,9 +1,5 @@
 package roulette_server;
 
-/**
- * Created by Jovan on 5/17/2015.
- */
-
 import roulette_server.Croupier;
 
 import java.lang.reflect.Modifier;

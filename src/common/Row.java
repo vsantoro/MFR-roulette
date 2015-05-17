@@ -1,8 +1,6 @@
 package common;
 
-/**
- * Created by Dragan Obradovic on 17-May-15.
- */
+
 public class Row extends Bet {
     private int row;
     public Row()

@@ -1,8 +1,6 @@
 package common;
 
-/**
- * Created by Jovan on 5/16/2015.
- */
+
 public class Single extends Bet implements Cloneable
 {
     private int number;

@@ -1,27 +1,20 @@
 package roulette_client;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
-        import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
-        import javax.net.ssl.SSLContext;
-        import java.io.IOException;
-        import java.net.InetAddress;
-        import java.net.SocketException;
-        import java.net.UnknownHostException;
-        import java.util.Scanner;
-        import java.util.logging.Level;
-        import java.util.logging.Logger;
-        import common.CommunicationCommands;
+import javax.net.ssl.SSLContext;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-/**
- *
- * @author POOP
- */
+import common.CommunicationCommands;
+
+
 
 public class RoulettePlayer implements Runnable{
     private Thread roulettePlayerThread = new Thread(this);
@@ -44,9 +37,7 @@ public class RoulettePlayer implements Runnable{
             }
         } catch (IOException e){
 
-        } catch (InterruptedException e){
-            //roulettePlayerThread.interrupt();
-        }
+        } catch (InterruptedException e){}
     }
 
     private void processMessage(String message) throws IOException{
@@ -58,7 +49,7 @@ public class RoulettePlayer implements Runnable{
         }
         else
         if(message.equals(CommunicationCommands.PYB)){
-            System.out.println("\nSERVER: " + "PYB");
+            System.out.println("\nSERVER: " + message);
         }
         else
         if(message.equals(CommunicationCommands.RNVP)){

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package roulette_server;
 
 import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
@@ -16,13 +11,9 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Scanner;
-//import roulette .server.Game;
 import common.CommunicationCommands;
 
-/**
- *
- * @author POOP
- */
+
 public class Server extends SocketCommunicator implements Runnable {
     private Hashtable<Integer, PlayerProxy> connectedPlayers = new Hashtable<>();
     private Thread serverThread = new Thread(this);
@@ -51,19 +42,6 @@ public class Server extends SocketCommunicator implements Runnable {
 
     private void processMessage(String message) throws IOException {
 
-        // Bilo bi dobro najpre proveriti da li je poznata komanda.
-        // Ako nije - poslati izvoru nepoznate komande poruku da je nastala greska
-
-        // Bilo bi dobro nekako grupisati komande - na primer po kategoriji:
-        // komande konekcije i komande igraca
-        // Onda bi ova metoda prvo pitala nesto poput
-
-        // if( connectionCommands.containCommandStartingWith(message) )
-        // { ... obradi komandu konekcije ... }
-
-        // if( playerCommands.containCommandStartingWith(message) )
-        // { ... izdvoj ID igraca, obradi ostatak komande ... }
-
         if( message.equals(CommunicationCommands.JOIN_MESSAGE) ) {
             PlayerProxy pp = new PlayerProxy(this, receivePacket.getAddress(), receivePacket.getPort());
             clientID++;
@@ -83,7 +61,7 @@ public class Server extends SocketCommunicator implements Runnable {
             }
         }
         else
-        if (message.startsWith(CommunicationCommands.STATE_REQUEST))    //**Jovan-Pretpostavljam da se i state unosi kao "STATE" + ID
+        if (message.startsWith(CommunicationCommands.STATE_REQUEST))
 		{
         	String[] parts=message.split("\\s+");
             Integer id=Integer.parseInt(parts[1]);
@@ -124,4 +102,3 @@ public class Server extends SocketCommunicator implements Runnable {
         datagramSocket.close();
     }
 }
-

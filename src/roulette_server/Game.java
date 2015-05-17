@@ -1,13 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package roulette_server;
 
 import java.net.SocketException;
-//import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Scanner;
 import java.util.Set;
@@ -16,16 +9,12 @@ import java.util.logging.Logger;
 
 import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
-//import roulette.communication.PlayerProxy;
-//import roulette.communication.Server;
+
 import common.CommunicationCommands;
 import roulette_server.TableWheel;
 import common.Bet;
 
-/**
- *
- * @author POOP
- */
+
 public class Game 
 {
     private double playerStartMoney = 200;
@@ -111,7 +100,9 @@ public class Game
         }
     }
 
+    //===============
     //game management
+    //===============
 
     public boolean isAcceptingBets()
     {
