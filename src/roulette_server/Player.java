@@ -118,6 +118,7 @@ public class Player implements Runnable
                 {
                     Bet newBet=Bets.decodeBet(parts[1] + " " + parts[2]);
                     game.sendBetToCroupier(playerId,newBet);
+                    updateMoney(-Double.parseDouble(parts[2]));
                     try
                     {
                         playerProxy.send(CommunicationCommands.ACCEPT);
@@ -139,5 +140,9 @@ public class Player implements Runnable
     public int getId()
     {
     	return playerId;
+    }
+
+    public synchronized void updateMoney(double amount){
+        money += amount;
     }
 }

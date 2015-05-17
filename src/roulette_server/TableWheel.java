@@ -11,7 +11,7 @@ public class TableWheel implements Runnable
     private Thread TableWheelThread=new Thread(this);
     private Croupier croupier;
     private boolean spinning;
-    private int number;
+    private int winningNumber;
 
     public TableWheel()
     {
@@ -31,7 +31,7 @@ public class TableWheel implements Runnable
                         wait();
                 }
                 Thread.sleep(8000);
-                generateNumber();
+                setWinningNumber();
                 croupier.wheelFinished();
                 spinning=false;
             }
@@ -54,13 +54,13 @@ public class TableWheel implements Runnable
         spinning=true;
         notify();
     }
-    public void generateNumber()
+    public void setWinningNumber()
     {
-        number= (int)(Math.random()*37);
+        winningNumber= (int)(Math.random()*37);
     }
-    public int getGeneratedNumber()
+    public int getWinningNumber()
     {
-        return number;
+        return winningNumber;
     }
 }
 

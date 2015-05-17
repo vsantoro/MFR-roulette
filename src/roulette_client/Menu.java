@@ -75,11 +75,12 @@ public class Menu {
                     return true;
 
                 case "Quit Game;":
-                    player.getClient().send(CommunicationCommands.QUIT_MESSAGE + " " + player.getID());
+                    if(!player.isPlaying()) player.getClient().send(CommunicationCommands.QUIT_MESSAGE + " " + player.getID());
+                    else System.out.println("You are still in game.");
                     return true;
 
                 case "State;":
-                    player.getClient().send(CommunicationCommands.STATE_REQUEST + " " + player.getID());
+                    if(player.getID() != 0) player.getClient().send(CommunicationCommands.STATE_REQUEST + " " + player.getID());
                     return true;
 
                 case "Place Bet;":

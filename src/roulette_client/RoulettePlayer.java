@@ -28,6 +28,7 @@ public class RoulettePlayer implements Runnable{
     private Client client;
     private int playerID = 0;
     private volatile boolean connected = false;
+    private volatile boolean playing = false;
 
     public RoulettePlayer(InetAddress address) throws IOException {
         client = new Client(address);
@@ -71,6 +72,7 @@ public class RoulettePlayer implements Runnable{
         }
         else
         if(message.equals(CommunicationCommands.ACCEPT)){
+            startPlaying();
             System.out.println("\nSERVER: " + message);
         }
         else
@@ -79,6 +81,15 @@ public class RoulettePlayer implements Runnable{
         }
         else
         if(message.equals(CommunicationCommands.FUND)){
+            System.out.println("\nSERVER: " + message);
+        }
+        else
+        if(message.startsWith(CommunicationCommands.WINNUMBER)){
+            System.out.println("\nSERVER: " + message);
+        }
+        else
+        if(message.startsWith(CommunicationCommands.WIN)){
+            stopPlaying();
             System.out.println("\nSERVER: " + message);
         }
     }
@@ -100,6 +111,12 @@ public class RoulettePlayer implements Runnable{
     public Integer getID() { return playerID; }
 
     public boolean isConnected(){ return connected; }
+
+    public void startPlaying(){ playing = true;}
+
+    public void stopPlaying(){ playing = false;}
+
+    public boolean isPlaying(){ return playing;}
 
 
     public static void main(String []args) {

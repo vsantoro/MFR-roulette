@@ -7,6 +7,7 @@
 package roulette_server;
 
 import java.util.Hashtable;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 //import roulette.common.Bet;
@@ -37,7 +38,7 @@ public class Croupier implements Runnable
                 game.sendMessageToAllPlayers(CommunicationCommands.PYB);
                 System.out.println("Krupje poceo!");
 
-                Thread.sleep(10000);
+                Thread.sleep(15000);
 
                 System.out.println("Krupje zavrsio!");
                 acceptingBets=false;
@@ -48,8 +49,10 @@ public class Croupier implements Runnable
                     while(!wheelStoppedSpinning)
                         wait();
                 }
-                System.out.println(game.getGeneratedNumber());
+                game.sendMessageToAllPlayers(CommunicationCommands.WINNUMBER + " " + game.getWinningNumber());
                 wheelStoppedSpinning=false;
+                calculateWinnings();
+                bets.clear();
             }
     	}
         catch(InterruptedException er){}
@@ -75,7 +78,7 @@ public class Croupier implements Runnable
         LinkedList<Bet> list=bets.get(playerId);
         if(list==null)
         {
-            list=new LinkedList<Bet>();
+            list=new LinkedList<>();
             list.add(newBet);
         }
         else
@@ -89,5 +92,18 @@ public class Croupier implements Runnable
     {
         wheelStoppedSpinning=true;
         notify();
+    }
+
+    public synchronized void calculateWinnings() {
+        Integer winningNumber = game.getWinningNumber();
+        Set<Integer> keys=bets.keySet();
+        for(Integer key : keys) {
+            LinkedList<Bet> player_bets=bets.get(key);
+            double sum = 0;
+            for (Bet player_bet : player_bets) {
+                sum += player_bet.winning(winningNumber);
+            }
+            game.updatePlayerMoney(key, sum);
+        }
     }
 }

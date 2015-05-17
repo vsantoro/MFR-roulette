@@ -18,6 +18,7 @@ import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 //import roulette.communication.PlayerProxy;
 //import roulette.communication.Server;
+import common.CommunicationCommands;
 import roulette_server.TableWheel;
 import common.Bet;
 
@@ -31,6 +32,7 @@ public class Game
     private Hashtable<Integer, Player> players;
     private Croupier croupier;
     private TableWheel table;
+    private Integer winningNumber;
     
 	// Po?to je samo jedna igra predvi?ena, mogao bi da se koristi
 	// uzorak Unikat (singleton). Pomo?u tog uzorka se lako mo?e
@@ -69,6 +71,7 @@ public class Game
     	players.remove(playerId);
     }
 
+
     public boolean isAcceptingBets()
     {
         return croupier.isAcceptingBets();
@@ -89,9 +92,16 @@ public class Game
         table.spinWheel();
     }
 
-    public int getGeneratedNumber()
+    public synchronized void updatePlayerMoney(int id, double money) {
+        Player player = players.get(id);
+        player.updateMoney(money);
+        if(money > 0) player.reportMessage(CommunicationCommands.WIN + " " + money);
+        else player.reportMessage(CommunicationCommands.WIN + " " + 0);
+    }
+
+    public int getWinningNumber()
     {
-        return table.getGeneratedNumber();
+        return table.getWinningNumber();
     }
     public Game()
     {
