@@ -15,6 +15,13 @@ public class Rouge extends Bet {
         super("Rouge");
     }
 
+    public double winning(int number) {
+        if(isRouge(number)){
+            return (amount * 36) / 18;
+        }
+        return 0;
+    }
+
     public String toString() {
         return code + " / " + amount;
     }

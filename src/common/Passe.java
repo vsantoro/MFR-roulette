@@ -14,6 +14,13 @@ public class Passe extends Bet {
         super("Passe");
     }
 
+    public double winning(int number) {
+        if(19 <= number && number <=36){
+            return (amount * 36) / 18;
+        }
+        return -amount;
+    }
+
     public String toString() {
         return code + " / " + amount;
     }

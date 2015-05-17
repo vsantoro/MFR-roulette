@@ -16,6 +16,13 @@ public class Manque extends Bet {
         super("Manque");
     }
 
+    public double winning(int number) {
+        if(1 <= number && number <= 18){
+            return (amount * 36) / 18;
+        }
+        return -amount;
+    }
+
     public String toString() {
         return code + " / " + amount;
     }

@@ -11,6 +11,13 @@ public class Column extends Bet{
         column=_column;
     }
 
+    public double winning(int number) {
+        if(number % 3 == column){
+            return (amount * 36) / 18;
+        }
+        return 0;
+    }
+
     @Override
     public String toString()
     {

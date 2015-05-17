@@ -6,6 +6,13 @@ public class Noir extends Bet {
         super("Noir");
     }
 
+    public double winning(int number) {
+        if(!isRouge(number)){
+            return (amount * 36) / 18;
+        }
+        return 0;
+    }
+
     public String toString() {
         return code + " / " + amount;
     }

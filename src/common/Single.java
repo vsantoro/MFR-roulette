@@ -15,6 +15,13 @@ public class Single extends Bet implements Cloneable
         number=_number;
     }
 
+    public double winning(int _number) {
+        if(_number == number){
+            return (amount * 36) / 18;
+        }
+        return 0;
+    }
+
     @Override
     public String toString()
     {
