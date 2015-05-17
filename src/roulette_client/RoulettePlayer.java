@@ -16,6 +16,7 @@ package roulette_client;
         import java.util.Scanner;
         import java.util.logging.Level;
         import java.util.logging.Logger;
+        import common.CommunicationCommands;
 
 /**
  *

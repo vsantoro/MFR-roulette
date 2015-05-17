@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 //import roulette.communication.PlayerProxy;
 import common.Bet;
 import common.Bets;
+import common.CommunicationCommands;
 
 /**
  *

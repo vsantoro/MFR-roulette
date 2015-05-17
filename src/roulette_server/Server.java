@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Scanner;
 //import roulette .server.Game;
+import common.CommunicationCommands;
 
 /**
  *
