@@ -74,13 +74,11 @@ public class Croupier implements Runnable
         LinkedList<Bet> list=bets.get(playerId);
         if(list==null)
         {
-            System.out.println("***");
             list=new LinkedList<Bet>();
             list.add(newBet);
         }
         else
         {
-            System.out.println("*****");
             list.add(newBet);
         }
         bets.put(playerId,list);
