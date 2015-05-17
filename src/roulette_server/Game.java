@@ -134,11 +134,11 @@ public class Game
         Scanner in = new Scanner(System.in);
         String stop = "START";
         try {
+            System.out.println("To terminate game, input \"STOP\".");
             Game g1=new Game();
             Server server = new Server(g1);
 
             while(!stop.equals("STOP")){
-                System.out.println("To terminate game, input \"STOP\".");
                 stop = in.next();
             }
             g1.terminateCroupier();

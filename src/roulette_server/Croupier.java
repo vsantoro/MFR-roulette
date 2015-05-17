@@ -18,7 +18,8 @@ public class Croupier implements Runnable
     private Hashtable<Integer,LinkedList<Bet>> bets;
     private static final Double[] rotationSpeeds;
 
-
+    private static final long pybTime=15000;
+    private static final long matchSeprationTime=15000;
 
     //==========================
     //constructor and terminator
@@ -118,7 +119,7 @@ public class Croupier implements Runnable
                 game.sendMessageToAllPlayers(CommunicationCommands.PYB);
                 System.out.println("CROUPIER: ACCEPTING NEW BETS!");
 
-                Thread.sleep(15000);
+                Thread.sleep(pybTime);
 
                 System.out.println("CROUPIER: NOT ACCEPTING NEW BETS!");
                 acceptingBets = false;
@@ -136,6 +137,8 @@ public class Croupier implements Runnable
                 game_no++;
                 calculateWinnings();
                 bets.clear();
+                System.out.println("NEW MATCH STARTS IN " + matchSeprationTime/1000);
+                Thread.sleep(matchSeprationTime);
             }
     	}
         catch(InterruptedException er){}
