@@ -19,7 +19,7 @@ public class Rouge extends Bet {
         if(isRouge(number)){
             return (amount * 36) / 18;
         }
-        return 0;
+        return -amount;
     }
 
     public String toString() {

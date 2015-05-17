@@ -17,7 +17,7 @@ public class Single extends Bet implements Cloneable
 
     public double winning(int _number) {
         if(_number == number){
-            return (amount * 36) / 18;
+            return (amount * 36);
         }
         return 0;
     }

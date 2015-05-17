@@ -13,9 +13,9 @@ public class Column extends Bet{
 
     public double winning(int number) {
         if(number % 3 == column){
-            return (amount * 36) / 18;
+            return (amount * 36) / 12;
         }
-        return 0;
+        return -amount;
     }
 
     @Override
