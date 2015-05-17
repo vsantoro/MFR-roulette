@@ -92,6 +92,10 @@ public class RoulettePlayer implements Runnable{
             stopPlaying();
             System.out.println("\nSERVER: " + message);
         }
+        else
+        if(message.startsWith(CommunicationCommands.BALANCE)){
+            System.out.println("\nSERVER: " + message);
+        }
     }
     public synchronized void connect(){
         if(!connected) connected = true;

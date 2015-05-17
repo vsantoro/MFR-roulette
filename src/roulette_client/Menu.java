@@ -89,6 +89,11 @@ public class Menu {
                     handleBetsInput(_index);
                     return true;
 
+                case "Balance;":
+                    if(player.getID() != 0) player.getClient().send(CommunicationCommands.BALANCE + " " + player.getID());
+                    else System.out.println("You are not connected!");
+                    return true;
+
                 case "Exit.":
                     if(player.isConnected()) player.getClient().send(CommunicationCommands.QUIT_MESSAGE + " " + player.getID());
                     player.terminate();
