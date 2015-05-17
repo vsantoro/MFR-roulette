@@ -48,7 +48,7 @@ public class Bets
 					// je obezbediti postavljanje tih parametara pre return.
 
                     bb=b.clone();
-                    bb.setAmount(parts.length - 1);
+                    bb.setAmount(Double.parseDouble(parts[parts.length - 1]));
                     if(parts[0]=="SINGLE")
                         ((Single)bb).setNumber(Integer.parseInt(parts[1]));
                     else

@@ -100,9 +100,38 @@ public class Player implements Runnable
     		quitGame();
     	}
         else
-        if(message.startsWith("BET"))
+        if(message.startsWith(CommunicationCommands.BET))
         {
-
+            String[] parts=message.split(" ", 2);
+            if(game.isAcceptingBets())
+            {
+                if(Double.parseDouble(parts[parts.length-1])>money)
+                {
+                    try
+                    {
+                        playerProxy.send(CommunicationCommands.FUND);
+                    }
+                    catch (IOException e){}
+                }
+                else
+                {
+                    Bet newBet=Bets.decodeBet(parts[1]);
+                    game.sendBetToCroupier(playerId,newBet);
+                    try
+                    {
+                        playerProxy.send(CommunicationCommands.ACCEPT);
+                    }
+                    catch(IOException e){}
+                }
+            }
+            else
+            {
+                try
+                {
+                    playerProxy.send(CommunicationCommands.REJECT);
+                }
+                catch(IOException e){}
+            }
         }
     }
     

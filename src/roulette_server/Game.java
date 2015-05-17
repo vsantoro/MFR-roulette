@@ -18,6 +18,8 @@ import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 //import roulette.communication.PlayerProxy;
 //import roulette.communication.Server;
+import roulette_server.TableWheel;
+import common.Bet;
 
 /**
  *
@@ -28,7 +30,7 @@ public class Game
     private double playerStartMoney = 200;
     private Hashtable<Integer, Player> players;
     private Croupier croupier;
-    
+    private TableWheel table;
     
 	// Po?to je samo jedna igra predvi?ena, mogao bi da se koristi
 	// uzorak Unikat (singleton). Pomo?u tog uzorka se lako mo?e
@@ -37,11 +39,11 @@ public class Game
     
     
     // Metoda kojom se prikljucuje nov igrac u igru
-	// Metoda vraæa iznos koji je dodeljen igraèu
+	// Metoda vraï¿½a iznos koji je dodeljen igraï¿½u
     public synchronized double newPlayer(PlayerProxy pp)
     {
         Player p = new Player(pp, playerStartMoney, this);
-        // Dodati igraèa u kolekciju igraèa koju pamti Game
+        // Dodati igraï¿½a u kolekciju igraï¿½a koju pamti Game
         //**Jovan
         players.put(new Integer(p.getId()), p);
         //**
@@ -66,32 +68,37 @@ public class Game
     	//(u croupier ili u igri)
     	players.remove(playerId);
     }
-//    
-//    public void sendToCroupier(String msg)
-//    {
-//    }
-//    
-//    public void recieveFromCroupier(String msg)
-//    {
-//    	
-//    }
-    
+
     public boolean isAcceptingBets()
     {
-    	if(croupier.isAcceptingBets()==true)
-    		return true;
-    	else 
-    		return false;
+        return croupier.isAcceptingBets();
     }
 
     public double getStartingMoney()
     {
         return playerStartMoney;
     }
+
+    public void sendBetToCroupier(int playerId,Bet newBet)
+    {
+        croupier.addNewBet(playerId,newBet);
+    }
+
+    public synchronized void spinTable()
+    {
+        table.spinWheel();
+    }
+
+    public int getGeneratedNumber()
+    {
+        return table.getGeneratedNumber();
+    }
     public Game()
     {
     	players=new Hashtable<Integer, Player>();
     	croupier=new Croupier(this);
+        table=new TableWheel();
+        table.setCroupier(croupier);
     }
 
     public static void main(String []args) {
@@ -100,7 +107,7 @@ public class Game
         try {
             Game g1=new Game();
             Server server = new Server(g1);
-            // Napravi igru i sve što je potrebno da bi se ona pokrenula i odvijala
+            // Napravi igru i sve ï¿½to je potrebno da bi se ona pokrenula i odvijala
         }
         catch (SocketException ex)
         {

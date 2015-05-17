@@ -21,5 +21,8 @@ public class CommunicationCommands {
     public static final String STATE_REQUEST = "STATE";
     public static final String PYB="PYB";   //place your bets
     public static final String RNVP="RNVP";
+    public static final String REJECT="REJECT";
+    public static final String FUND="FUND";
+    public static final String ACCEPT="ACCEPT";
     // ... dodati opise drugih komandi
 }
