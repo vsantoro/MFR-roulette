@@ -1,6 +1,3 @@
-/**
- * Created by Dragan Obradovic on 15-May-15.
- */
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -40,7 +37,7 @@ public class Server extends SocketCommunicator implements Runnable {
 
     public void run() {
         System.out.println("Game server started...");
-        while( ! serverThread.interrupted() ) {
+        while( ! Thread.interrupted() ) {
             try {
                 String message = receive();
                 System.out.println("Server received: " + message);
@@ -79,7 +76,7 @@ public class Server extends SocketCommunicator implements Runnable {
             Integer id = Integer.parseInt(parts[1]);
             PlayerProxy pp = connectedPlayers.get(id);
             if( pp != null ) {
-                pp.send(parts[0]);
+                pp.receivedMessage(parts[0]);
                 pp.send(CommunicationCommands.QUIT_RESPONSE);
                 connectedPlayers.remove(id);
             }
@@ -92,7 +89,7 @@ public class Server extends SocketCommunicator implements Runnable {
             PlayerProxy pp= connectedPlayers.get(id);
             if( pp != null )
             {
-                if(game.isAcceptingBets()==true)
+                if(game.isAcceptingBets())
                     pp.send(CommunicationCommands.PYB);
                 else
                     pp.send(CommunicationCommands.RNVP);
