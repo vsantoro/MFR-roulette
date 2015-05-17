@@ -10,16 +10,15 @@ import java.lang.reflect.Modifier;
 
 public class TableWheel implements Runnable
 {
-    private Thread TableWheelThread=new Thread(this);
+    private Thread tableThread=new Thread(this);
     private Croupier croupier;
     private boolean spinning;
     private int winningNumber;
     private double startingSpeed;
     private double rotationAngle;
     private static final int[] numberArray;
-    private static final double fieldAngle=9.73;
+    private static final double fieldAngle = 9.73;
 
-    //inicijalizacija brojeva na obodu tocka.
     static
     {
         numberArray=new int[37];
@@ -60,17 +59,74 @@ public class TableWheel implements Runnable
         numberArray[34]=14;
         numberArray[35]=31;
         numberArray[36]=9;
-
     }
-
+    //==========================
+    //constructor and terminator
+    //==========================
 
     public TableWheel()
     {
-        croupier=null;
-        spinning=false;
-        rotationAngle=0;
-        TableWheelThread.start();
+        croupier = null;
+        spinning = false;
+        rotationAngle = 0;
+        tableThread.start();
     }
+
+    public void terminate() {
+        tableThread.interrupt();
+    }
+
+
+
+    //===================
+    //croupier management
+    //===================
+
+    public void setCroupier(Croupier _croupier)
+    {
+        croupier=_croupier;
+    }
+
+    public Croupier getCroupier()
+    {
+        return croupier;
+    }
+
+
+
+    //================
+    //table management
+    //================
+
+    public synchronized void startSpinning(double speed) {
+        startingSpeed = speed;
+        spinning = true;
+        notify();
+    }
+
+    public synchronized void stopSpinning() {
+        rotationAngle = 0;
+        croupier.wheelStopped();
+        spinning = false;
+    }
+
+    public int calculateNumber()
+    {
+        int number=(int)Math.floor(((int) rotationAngle % 360) / fieldAngle);
+        return number;
+    }
+
+    public int getWinningNumber()
+    {
+        return winningNumber;
+    }
+
+
+
+    //===
+    //run
+    //===
+
     public void run()
     {
         try
@@ -91,38 +147,10 @@ public class TableWheel implements Runnable
                     tempSpeed*=0.99;
                 }
                 winningNumber=numberArray[calculateNumber()];
-                rotationAngle=0;
-                croupier.wheelFinished();
-                spinning=false;
+                stopSpinning();
             }
         }
         catch (InterruptedException e) {}
-    }
-
-    public void setCroupier(Croupier _croupier)
-    {
-        croupier=_croupier;
-    }
-
-    public Croupier getCroupier()
-    {
-        return croupier;
-    }
-
-    public synchronized void spinWheel(double speed)
-    {
-        startingSpeed=speed;
-        spinning=true;
-        notify();
-    }
-    public int calculateNumber()
-    {
-        int number=(int)Math.floor(((int) rotationAngle % 360) / fieldAngle);
-        return number;
-    }
-    public int getWinningNumber()
-    {
-        return winningNumber;
     }
 }
 

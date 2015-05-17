@@ -25,58 +25,60 @@ public class Croupier implements Runnable
 	private Thread croupierThread;
 	private Game game;
 	private volatile boolean acceptingBets;
-    private volatile boolean wheelStoppedSpinning;
-
+    private volatile boolean spinning;
     private Hashtable<Integer,LinkedList<Bet>> bets;
-    private Double[] rotationSpeeds;
-    public void run()
-    {
-        try
-        {
-            while (true)
-            {
-                acceptingBets=true;
-                game.sendMessageToAllPlayers(CommunicationCommands.PYB);
-                System.out.println("Krupje poceo!");
+    private static final Double[] rotationSpeeds;
 
-                Thread.sleep(15000);
 
-                System.out.println("Krupje zavrsio!");
-                acceptingBets=false;
-                game.sendMessageToAllPlayers(CommunicationCommands.RNVP);
-                double newSpeed=rotationSpeeds[(int)(Math.random()*5)];
-                game.spinTable(newSpeed);
-                synchronized (this)
-                {
-                    while(!wheelStoppedSpinning)
-                        wait();
-                }
-                game.sendMessageToAllPlayers(CommunicationCommands.WINNUMBER + " " + game.getWinningNumber());
-                wheelStoppedSpinning=false;
-                calculateWinnings();
-                bets.clear();
-            }
-    	}
-        catch(InterruptedException er){}
+
+    //==========================
+    //constructor and terminator
+    //==========================
+
+    static {
+        rotationSpeeds = new Double[300];
+        for(int i = 0; i < 300; i++){
+            rotationSpeeds[i] = 100.00 + Math.random() * 10000.00;
+        }
 
     }
-    
+
     public Croupier(Game _game)
     {
-    	game=_game;
-    	croupierThread=new Thread(this);
-        wheelStoppedSpinning=false;
-        bets=new Hashtable<Integer,LinkedList<Bet>>();
-        rotationSpeeds=new Double[5];
-        rotationSpeeds[0]=100.0;
-        rotationSpeeds[1]=200.0;
-        rotationSpeeds[2]=300.0;
-        rotationSpeeds[3]=400.0;
-        rotationSpeeds[4]=500.0;
-
+        game=_game;
+        croupierThread = new Thread(this);
+        spinning = false;
+        bets = new Hashtable<Integer,LinkedList<Bet>>();
         croupierThread.start();
     }
-    
+
+    public void terminate() {
+        croupierThread.interrupt();
+    }
+
+
+
+    //================
+    //table management
+    //================
+
+    public synchronized void wheelStopped()
+    {
+        spinning=false;
+        notify();
+    }
+
+    public void spinWheel(Double speed) {
+        spinning = true;
+        game.spinWheel(speed);
+    }
+
+
+
+    //==============
+    //bet management
+    //==============
+
     public boolean isAcceptingBets()
     {
         return acceptingBets;
@@ -97,12 +99,6 @@ public class Croupier implements Runnable
         bets.put(playerId,list);
     }
 
-    public synchronized void wheelFinished()
-    {
-        wheelStoppedSpinning=true;
-        notify();
-    }
-
     public synchronized void calculateWinnings() {
         Integer winningNumber = game.getWinningNumber();
         Set<Integer> keys=bets.keySet();
@@ -114,5 +110,46 @@ public class Croupier implements Runnable
             }
             game.updatePlayerMoney(key, sum);
         }
+    }
+
+
+
+    //===
+    //run
+    //===
+
+    public void run()
+    {
+        int game_no = 1;
+        try
+        {
+            while (!Thread.interrupted())
+            {
+                acceptingBets = true;
+                game.sendMessageToAllPlayers(CommunicationCommands.PYB);
+                System.out.println("CROUPIER: ACCEPTING NEW BETS!");
+
+                Thread.sleep(15000);
+
+                System.out.println("CROUPIER: NOT ACCEPTING NEW BETS!");
+                acceptingBets = false;
+                game.sendMessageToAllPlayers(CommunicationCommands.RNVP);
+                double newSpeed=rotationSpeeds[(int)(Math.random()*300)];
+                System.out.println("CROUPIER: STARTING GAME NO. " + game_no + "");
+                spinWheel(newSpeed);
+                synchronized (this)
+                {
+                    while(spinning)
+                        wait();
+                }
+                System.out.println("CROUPIER: GAME NO. " + game_no + " FINISHED. WINNING NUMBER: " + game.getWinningNumber());
+                game.sendMessageToAllPlayers(CommunicationCommands.WINNUMBER + " " + game.getWinningNumber());
+                game_no++;
+                calculateWinnings();
+                bets.clear();
+            }
+    	}
+        catch(InterruptedException er){}
+
     }
 }

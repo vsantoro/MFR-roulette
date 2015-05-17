@@ -36,7 +36,12 @@ public class Game
 
     private static Game instance = null;
 
-    //singleton constructor
+
+
+
+    //=====================================
+    //singleton constructor and terminators
+    //=====================================
 
     protected Game() {
         players = new Hashtable<Integer, Player>();
@@ -52,7 +57,19 @@ public class Game
         return instance;
     }
 
+    public void terminateCroupier() {
+        croupier.terminate();
+    }
+
+    public void terminateTable() {
+        table.terminate();
+    }
+
+
+
+    //=================
     //player management
+    //=================
 
     public synchronized double newPlayer(PlayerProxy pp)
     {
@@ -78,7 +95,11 @@ public class Game
         else player.reportMessage(CommunicationCommands.WIN + " " + 0);
     }
 
+
+
+    //=============
     //communication
+    //=============
 
     public void sendMessageToAllPlayers(String message)
     {
@@ -99,12 +120,12 @@ public class Game
 
     public void sendBetToCroupier(int playerId,Bet newBet)
     {
-        croupier.addNewBet(playerId,newBet);
+        croupier.addNewBet(playerId, newBet);
     }
 
-    public synchronized void spinTable(double speed)
+    public synchronized void spinWheel(double speed)
     {
-        table.spinWheel(speed);
+        table.startSpinning(speed);
     }
 
     public int getWinningNumber()
@@ -112,7 +133,11 @@ public class Game
         return table.getWinningNumber();
     }
 
+
+
+    //====
     //main
+    //====
 
     public static void main(String []args) {
         Scanner in = new Scanner(System.in);
@@ -120,16 +145,19 @@ public class Game
         try {
             Game g1=new Game();
             Server server = new Server(g1);
+
+            while(!stop.equals("STOP")){
+                System.out.println("To terminate game, input \"STOP\".");
+                stop = in.next();
+            }
+            g1.terminateCroupier();
+            g1.terminateTable();
+            server.terminate();
+            System.out.println("Game terminated.");
         }
         catch (SocketException ex)
         {
             Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        while(!stop.equals("STOP")){
-            System.out.println("To terminate game, input \"STOP\".");
-            stop = in.next();
-        }
-        System.out.println("Game terminated.");
     }
 }
