@@ -32,7 +32,8 @@ public class Bets
         String []parts = str.split("\\s|_");
         for(Bet b : bets)
         {
-            if(b.getClass().getName().toUpperCase().equals(parts[0]))
+            String[] temp=(b.getClass().getName().toUpperCase()).split("\\.");
+            if(temp[1].equals(parts[0]))
             {
                 try
                 {
@@ -49,10 +50,10 @@ public class Bets
 
                     bb=b.clone();
                     bb.setAmount(Double.parseDouble(parts[parts.length - 1]));
-                    if(parts[0]=="SINGLE")
+                    if(parts[0].equals("SINGLE"))
                         ((Single)bb).setNumber(Integer.parseInt(parts[1]));
                     else
-                    if(parts[0]=="COLUMN")
+                    if(parts[0].equals("COLUMN"))
                     {
                         //****Dodati odgovarajuca polja
                     }

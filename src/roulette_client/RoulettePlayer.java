@@ -68,8 +68,19 @@ public class RoulettePlayer implements Runnable{
             disconnect();
             playerID = 0;
         }
+        else
+        if(message.equals(CommunicationCommands.ACCEPT)){
+            System.out.println("\nSERVER: " + message);
+        }
+        else
+        if(message.equals(CommunicationCommands.REJECT)){
+            System.out.println("\nSERVER: " + message);
+        }
+        else
+        if(message.equals(CommunicationCommands.FUND)){
+            System.out.println("\nSERVER: " + message);
+        }
     }
-
     public synchronized void connect(){
         if(!connected) connected = true;
         notifyAll();

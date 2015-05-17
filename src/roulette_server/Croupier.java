@@ -48,6 +48,7 @@ public class Croupier implements Runnable
                         wait();
                 }
                 System.out.println(game.getGeneratedNumber());
+                wheelStoppedSpinning=false;
             }
     	}
         catch(InterruptedException er){}
@@ -59,6 +60,7 @@ public class Croupier implements Runnable
     	game=_game;
     	croupierThread=new Thread(this);
         wheelStoppedSpinning=false;
+        bets=new Hashtable<Integer,LinkedList<Bet>>();
     	croupierThread.start();
     }
     
@@ -72,11 +74,13 @@ public class Croupier implements Runnable
         LinkedList<Bet> list=bets.get(playerId);
         if(list==null)
         {
+            System.out.println("***");
             list=new LinkedList<Bet>();
             list.add(newBet);
         }
         else
         {
+            System.out.println("*****");
             list.add(newBet);
         }
         bets.put(playerId,list);

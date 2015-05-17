@@ -102,7 +102,7 @@ public class Player implements Runnable
         else
         if(message.startsWith(CommunicationCommands.BET))
         {
-            String[] parts=message.split(" ", 2);
+            String[] parts=message.split(" ");
             if(game.isAcceptingBets())
             {
                 if(Double.parseDouble(parts[parts.length-1])>money)
@@ -115,7 +115,7 @@ public class Player implements Runnable
                 }
                 else
                 {
-                    Bet newBet=Bets.decodeBet(parts[1]);
+                    Bet newBet=Bets.decodeBet(parts[1] + " " + parts[2]);
                     game.sendBetToCroupier(playerId,newBet);
                     try
                     {
