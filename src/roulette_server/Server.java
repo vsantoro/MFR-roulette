@@ -106,6 +106,17 @@ public class Server extends SocketCommunicator implements Runnable {
             }
 
         }
+        else
+        if(message.startsWith(CommunicationCommands.BALANCE))
+        {
+            String[] parts=message.split(" ");
+            Integer id = Integer.parseInt(parts[1]);
+            PlayerProxy pp = connectedPlayers.get(id);
+            if(pp!=null)
+            {
+                pp.receivedMessage(parts[0]);
+            }
+        }
     }
 
     public void terminate() {

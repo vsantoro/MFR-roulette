@@ -135,6 +135,15 @@ public class Player implements Runnable
                 catch(IOException e){}
             }
         }
+        else
+        if(message.equals(CommunicationCommands.BALANCE))
+        {
+            try
+            {
+                playerProxy.send(CommunicationCommands.BALANCE +" "+ money);
+            }
+            catch(IOException e){}
+        }
     }
     
     public int getId()

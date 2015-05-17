@@ -26,5 +26,6 @@ public class CommunicationCommands {
     public static final String ACCEPT="ACCEPT";
     public static final String WIN="WIN";
     public static final String WINNUMBER = "WINNUMBER";
+    public static final String BALANCE="BALANCE";
     // ... dodati opise drugih komandi
 }
