@@ -27,6 +27,7 @@ public class Menu {
         mainMenu.add(mainMenu.size() + 1 + ". " + "Quit Game;");
         mainMenu.add(mainMenu.size() + 1 + ". " + "State;");
         mainMenu.add(mainMenu.size() + 1 + ". " + "Place Bet;");
+        mainMenu.add(mainMenu.size() + 1 + ". " + "Balance;");
         mainMenu.add(mainMenu.size() + 1 + ". " + "Exit.");
 
         betsMenu.add(betsMenu.size() + 1 + ". " + "Manque;");
@@ -87,6 +88,11 @@ public class Menu {
                     displayBetsMenu();
                     int _index = in.nextInt();
                     handleBetsInput(_index);
+                    return true;
+
+                case "Balance;":
+                    if(player.getID() != 0) player.getClient().send(CommunicationCommands.BALANCE + " " + player.getID());
+                    else System.out.println("You are not connected!");
                     return true;
 
                 case "Exit.":

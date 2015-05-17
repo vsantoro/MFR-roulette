@@ -20,7 +20,7 @@ public class Manque extends Bet {
         if(1 <= number && number <= 18){
             return (amount * 36) / 18;
         }
-        return -amount;
+        return 0;
     }
 
     public String toString() {

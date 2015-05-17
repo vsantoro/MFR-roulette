@@ -18,7 +18,7 @@ public class Passe extends Bet {
         if(19 <= number && number <=36){
             return (amount * 36) / 18;
         }
-        return -amount;
+        return 0;
     }
 
     public String toString() {
