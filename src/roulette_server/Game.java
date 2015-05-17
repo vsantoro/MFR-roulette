@@ -33,53 +33,68 @@ public class Game
     private Croupier croupier;
     private TableWheel table;
     private Integer winningNumber;
-    
-	// Po?to je samo jedna igra predvi?ena, mogao bi da se koristi
-	// uzorak Unikat (singleton). Pomo?u tog uzorka se lako mo?e
-	// pro?iriti funkcionalnost da podr?i ve?i (ali kontrolisan)
-	// broj igara.
-    
-    
-    // Metoda kojom se prikljucuje nov igrac u igru
-	// Metoda vra�a iznos koji je dodeljen igra�u
+
+    private static Game instance = null;
+
+    //singleton constructor
+
+    protected Game() {
+        players = new Hashtable<Integer, Player>();
+        croupier = new Croupier(this);
+        table = new TableWheel();
+        table.setCroupier(croupier);
+    }
+
+    public static Game getInstance() {
+        if (instance == null) {
+            instance = new Game();
+        }
+        return instance;
+    }
+
+    //player management
+
     public synchronized double newPlayer(PlayerProxy pp)
     {
         Player p = new Player(pp, playerStartMoney, this);
-        // Dodati igra�a u kolekciju igra�a koju pamti Game
-        //**Jovan
         players.put(new Integer(p.getId()), p);
-        //**
         return playerStartMoney;
     }
-    
-    // Metoda koja sluzi za "broadcast" - slanje poruke svim igracima
-    public void sendMessageToAllPlayers(String message)
-    {
-    	Set<Integer> keys=players.keySet();
-        for(Integer k : keys)
-        {
-        	Player p=players.get(k);
-            p.reportMessage(message);
-        }
-    }
-    
+
     public synchronized void deletePlayer(int playerId)
     {
-    	//Ako je pocela partija ne sme da se izbaci igrac. Dodaj to kao 
-    	//uslov kada regulises croupiera , i odluci gde bi trebalo da stoji
-    	//(u croupier ili u igri)
-    	players.remove(playerId);
-    }
-
-
-    public boolean isAcceptingBets()
-    {
-        return croupier.isAcceptingBets();
+        players.remove(playerId);
     }
 
     public double getStartingMoney()
     {
         return playerStartMoney;
+    }
+
+    public synchronized void updatePlayerMoney(int id, double money) {
+        Player player = players.get(id);
+        player.updateMoney(money);
+        if(money > 0) player.reportMessage(CommunicationCommands.WIN + " " + money);
+        else player.reportMessage(CommunicationCommands.WIN + " " + 0);
+    }
+
+    //communication
+
+    public void sendMessageToAllPlayers(String message)
+    {
+        Set<Integer> keys=players.keySet();
+        for(Integer k : keys)
+        {
+            Player p=players.get(k);
+            p.reportMessage(message);
+        }
+    }
+
+    //game management
+
+    public boolean isAcceptingBets()
+    {
+        return croupier.isAcceptingBets();
     }
 
     public void sendBetToCroupier(int playerId,Bet newBet)
@@ -92,43 +107,29 @@ public class Game
         table.spinWheel();
     }
 
-    public synchronized void updatePlayerMoney(int id, double money) {
-        Player player = players.get(id);
-        player.updateMoney(money);
-        if(money > 0) player.reportMessage(CommunicationCommands.WIN + " " + money);
-        else player.reportMessage(CommunicationCommands.WIN + " " + 0);
-    }
-
     public int getWinningNumber()
     {
         return table.getWinningNumber();
     }
-    public Game()
-    {
-    	players=new Hashtable<Integer, Player>();
-    	croupier=new Croupier(this);
-        table=new TableWheel();
-        table.setCroupier(croupier);
-    }
+
+    //main
 
     public static void main(String []args) {
         Scanner in = new Scanner(System.in);
-        int i = 1;
+        String stop = "START";
         try {
             Game g1=new Game();
             Server server = new Server(g1);
-            // Napravi igru i sve �to je potrebno da bi se ona pokrenula i odvijala
         }
         catch (SocketException ex)
         {
             Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
         }
-    	
 
-    	System.out.println("Nesto");
-        while(i == 1){
-            i = in.nextInt();
+        while(!stop.equals("STOP")){
+            System.out.println("To terminate game, input \"STOP\".");
+            stop = in.next();
         }
-        System.out.println("Igra je zavrsena");
+        System.out.println("Game terminated.");
     }
 }
