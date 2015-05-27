@@ -4,10 +4,18 @@ package common;
 public class Single extends Bet implements Cloneable
 {
     private int number;
-    public Single()
-    {
-        super("Single");
+
+    public Single() {
+        this(0, 0);
     }
+
+    public Single(double amount, int _number) {
+        super("Single", amount);
+        number = _number;
+    }
+
+
+
     public void setNumber(int _number)
     {
         number=_number;
@@ -27,7 +35,7 @@ public class Single extends Bet implements Cloneable
     }
 
     @Override
-    public String codeMessage()
+    public String getCode()
     {
         return code.toUpperCase()+"_"+number+" " + amount;
     }

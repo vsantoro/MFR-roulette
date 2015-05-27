@@ -3,7 +3,11 @@ package common;
 public class Impair extends Bet {
 
     public Impair() {
-        super("Impair");
+        this(0);
+    }
+
+    public Impair(double amount) {
+        super("Impair", amount);
     }
 
     public double winning(int number) {
@@ -17,7 +21,7 @@ public class Impair extends Bet {
         return code + " / " + amount;
     }
 
-    public String codeMessage() {
+    public String getCode() {
         return code.toUpperCase() + " " + amount;
     }
 

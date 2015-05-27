@@ -2,8 +2,13 @@ package common;
 
 
 public class Passe extends Bet {
+
     public Passe() {
-        super("Passe");
+        this(0);
+    }
+
+    public Passe(double amount) {
+        super("Passe", amount);
     }
 
     public double winning(int number) {
@@ -17,7 +22,7 @@ public class Passe extends Bet {
         return code + " / " + amount;
     }
 
-    public String codeMessage() {
+    public String getCode() {
         return code.toUpperCase() + " " + amount;
     }
 

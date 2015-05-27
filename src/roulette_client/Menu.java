@@ -6,7 +6,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.io.IOException;
 import java.util.ArrayList;
-import common.CommunicationCommands;
+
+import common.*;
+import common.Bet.*;
+import common.Bets.*;
 
 class InvalidIndexException extends Exception{
     public String toString() {
@@ -65,23 +68,22 @@ public class Menu {
     public boolean handleMainInput(int index) throws InvalidIndexException{
         if(0 > index || index > mainMenu.size()) throw new InvalidIndexException();
         String []parts = (mainMenu.get(index - 1)).split(" ", 2);
-        try{
             switch (parts[1]) {
                 case "Join Game;":
-                    if(player.getID() == 0){
+                    if (player.getID() == 0) {
                         player.connect();
-                        player.getClient().send(CommunicationCommands.JOIN_MESSAGE);
+                        player.send(CommunicationCommands.JOIN_MESSAGE);
                         return true;
                     }
                     return true;
 
                 case "Quit Game;":
-                    if(!player.isPlaying()) player.getClient().send(CommunicationCommands.QUIT_MESSAGE + " " + player.getID());
+                    if (!player.isPlaying()) player.send(CommunicationCommands.QUIT_MESSAGE + " " + player.getID());
                     else System.out.println("You are still in game.");
                     return true;
 
                 case "State;":
-                    if(player.getID() != 0) player.getClient().send(CommunicationCommands.STATE_REQUEST + " " + player.getID());
+                    if (player.getID() != 0) player.send(CommunicationCommands.STATE_REQUEST + " " + player.getID());
                     return true;
 
                 case "Place Bet;":
@@ -91,149 +93,152 @@ public class Menu {
                     return true;
 
                 case "Balance;":
-                    if(player.getID() != 0) player.getClient().send(CommunicationCommands.BALANCE + " " + player.getID());
+                    if (player.getID() != 0) player.send(CommunicationCommands.BALANCE + " " + player.getID());
                     else System.out.println("You are not connected!");
                     return true;
 
                 case "Exit.":
-                    if(player.isConnected()) player.getClient().send(CommunicationCommands.QUIT_MESSAGE + " " + player.getID());
+                    if (player.isConnected()) player.send(CommunicationCommands.QUIT_MESSAGE + " " + player.getID());
+                    player.closeClient();
                     player.terminate();
-                    player.getClient().datagramSocket.close();
                     return false;
 
                 default:
                     return true;
             }
-        } catch (IOException ex){
-            Logger.getLogger(RoulettePlayer.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return false;
     }
 
     public void handleBetsInput(int index) throws InvalidIndexException {
-        if(0 > index || index > betsMenu.size()) throw new InvalidIndexException();
+        if (0 > index || index > betsMenu.size()) throw new InvalidIndexException();
         double amount;
-        String []parts = (betsMenu.get(index - 1)).split(" ", 2);
-        try{
-            switch (parts[1]){
-                case "Manque;":
-                    System.out.print("Input amount: ");
+        String[] parts = (betsMenu.get(index - 1)).split(" ", 2);
+        Bet bet;
+        switch (parts[1]) {
+            case "Manque;":
+                System.out.print("Input amount: ");
+                amount = in.nextDouble();
+                while (amount < 0) {
+                    System.out.print("Invalid amount!\nInput amount:");
                     amount = in.nextDouble();
-                    while (amount < 0){
-                        System.out.print("Invalid amount!\nInput amount:");
-                        amount = in.nextDouble();
-                    }
-                    player.getClient().send(CommunicationCommands.BET + " " + player.getID() + " " + "MANQUE" + " " + amount);
-                    break;
+                }
+                bet = new Manque(amount);
+                player.processBet(bet);
+                break;
 
-                case "Passe;":
-                    System.out.print("Input amount: ");
+            case "Passe;":
+                System.out.print("Input amount: ");
+                amount = in.nextDouble();
+                while (amount < 0) {
+                    System.out.print("Invalid amount!\nInput amount:");
                     amount = in.nextDouble();
-                    while (amount < 0){
-                        System.out.print("Invalid amount!\nInput amount:");
-                        amount = in.nextDouble();
-                    }
-                    player.getClient().send(CommunicationCommands.BET + " " + player.getID() + " " + "PASSE" + " " + amount);
-                    break;
+                }
+                bet = new Passe(amount);
+                player.processBet(bet);
+                break;
 
-                case "Rouge;":
-                    System.out.print("Input amount: ");
+            case "Rouge;":
+                System.out.print("Input amount: ");
+                amount = in.nextDouble();
+                while (amount < 0) {
+                    System.out.print("Invalid amount!\nInput amount:");
                     amount = in.nextDouble();
-                    while (amount < 0){
-                        System.out.print("Invalid amount!\nInput amount:");
-                        amount = in.nextDouble();
-                    }
-                    player.getClient().send(CommunicationCommands.BET + " " + player.getID() + " " + "ROUGE" + " " + amount);
-                    break;
+                }
+                bet = new Rouge(amount);
+                player.processBet(bet);
+                break;
 
-                case "Noir;":
-                    System.out.print("Input amount: ");
+            case "Noir;":
+                System.out.print("Input amount: ");
+                amount = in.nextDouble();
+                while (amount < 0) {
+                    System.out.print("Invalid amount!\nInput amount:");
                     amount = in.nextDouble();
-                    while (amount < 0){
-                        System.out.print("Invalid amount!\nInput amount:");
-                        amount = in.nextDouble();
-                    }
-                    player.getClient().send(CommunicationCommands.BET + " " + player.getID() + " " + "NOIR" + " " + amount);
-                    break;
+                }
+                bet = new Noir(amount);
+                player.processBet(bet);
+                break;
 
-                case "Pair;":
-                    System.out.print("Input amount: ");
+            case "Pair;":
+                System.out.print("Input amount: ");
+                amount = in.nextDouble();
+                while (amount < 0) {
+                    System.out.print("Invalid amount!\nInput amount:");
                     amount = in.nextDouble();
-                    while (amount < 0){
-                        System.out.print("Invalid amount!\nInput amount:");
-                        amount = in.nextDouble();
-                    }
-                    player.getClient().send(CommunicationCommands.BET + " " + player.getID() + " " + "PAIR" + " " + amount);
-                    break;
+                }
+                bet = new Pair(amount);
+                player.processBet(bet);
+                break;
 
-                case "Impair;":
-                    System.out.print("Input amount: ");
+            case "Impair;":
+                System.out.print("Input amount: ");
+                amount = in.nextDouble();
+                while (amount < 0) {
+                    System.out.print("Invalid amount!\nInput amount:");
                     amount = in.nextDouble();
-                    while (amount < 0){
-                        System.out.print("Invalid amount!\nInput amount:");
-                        amount = in.nextDouble();
-                    }
-                    player.getClient().send(CommunicationCommands.BET + " " + player.getID() + " " + "IMPAIR" + " " + amount);
-                    break;
+                }
+                bet = new Impair(amount);
+                player.processBet(bet);
+                break;
 
-                case "Single;":
-                    System.out.print("Which number from 0 to 36 would you like to bet on: ");
-                    int number = in.nextInt();
-                    while(number < 0 || number > 36){
-                        System.out.print("Invalid number!\nWhich number from 0 to 36 would you like to bet on: ");
-                        number = in.nextInt();
-                    }
-
-                    System.out.print("Input amount: ");
-                    amount = in.nextDouble();
-                    while (amount < 0){
-                        System.out.print("Invalid amount!\nInput amount:");
-                        amount = in.nextDouble();
-                    }
-
-                    player.getClient().send(CommunicationCommands.BET + " " + player.getID() + " " + "SINGLE" + "_" + number + " " + amount);
-                    break;
-
-                case "Column;":
-                    System.out.print("Which column (1st, 2nd or 3rd) would you like to bet on: ");
+            case "Single;":
+                System.out.print("Which number from 0 to 36 would you like to bet on: ");
+                int number = in.nextInt();
+                while (number < 0 || number > 36) {
+                    System.out.print("Invalid number!\nWhich number from 0 to 36 would you like to bet on: ");
                     number = in.nextInt();
-                    while(number < 1 || number > 3){
-                        System.out.print("Invalid number!\nWhich column (1st, 2nd or 3rd) would you like to bet on: ");
-                        number = in.nextInt();
-                    }
+                }
 
-                    System.out.print("Input amount: ");
+                System.out.print("Input amount: ");
+                amount = in.nextDouble();
+                while (amount < 0) {
+                    System.out.print("Invalid amount!\nInput amount:");
                     amount = in.nextDouble();
-                    while (amount < 0){
-                        System.out.print("Invalid amount!\nInput amount:");
-                        amount = in.nextDouble();
-                    }
-                    player.getClient().send(CommunicationCommands.BET + " " + player.getID() + " " + "COLUMN" + "_" + number + " " + amount);
-                    break;
+                }
 
-                case "Row;":
-                    System.out.print("Which of 12 rows would you like to bet on: ");
+                bet = new Single(amount, number);
+                player.processBet(bet);
+                break;
+
+            case "Column;":
+                System.out.print("Which column (1st, 2nd or 3rd) would you like to bet on: ");
+                number = in.nextInt();
+                while (number < 1 || number > 3) {
+                    System.out.print("Invalid number!\nWhich column (1st, 2nd or 3rd) would you like to bet on: ");
                     number = in.nextInt();
-                    while(number < 1 || number > 12){
-                        System.out.print("Invalid number!\nWhich of 12 rows would you like to bet on: ");
-                        number = in.nextInt();
-                    }
+                }
 
-                    System.out.print("Input amount: ");
+                System.out.print("Input amount: ");
+                amount = in.nextDouble();
+                while (amount < 0) {
+                    System.out.print("Invalid amount!\nInput amount:");
                     amount = in.nextDouble();
-                    while (amount < 0){
-                        System.out.print("Invalid amount!\nInput amount:");
-                        amount = in.nextDouble();
-                    }
-                    player.getClient().send(CommunicationCommands.BET + " " + player.getID() + " " + "ROW" + "_" + number + " " + amount);
-                    break;
-                case "Return to main menu.": default:
-                    break;
-            }
-        } catch (IOException ex){
-            Logger.getLogger(RoulettePlayer.class.getName()).log(Level.SEVERE, null, ex);
-        }  catch (InputMismatchException ex){
-            System.out.println("Niste uneli broj!");
+                }
+
+                bet = new Column(amount, number);
+                player.processBet(bet);
+                break;
+
+            case "Row;":
+                System.out.print("Which of 12 rows would you like to bet on: ");
+                number = in.nextInt();
+                while (number < 1 || number > 12) {
+                    System.out.print("Invalid number!\nWhich of 12 rows would you like to bet on: ");
+                    number = in.nextInt();
+                }
+
+                System.out.print("Input amount: ");
+                amount = in.nextDouble();
+                while (amount < 0) {
+                    System.out.print("Invalid amount!\nInput amount:");
+                    amount = in.nextDouble();
+                }
+
+                bet = new Row(amount, number);
+                player.processBet(bet);
+                break;
+            case "Return to main menu.":
+            default:
+                break;
         }
     }
 }

@@ -1,6 +1,7 @@
 package roulette_client;
 
 
+import common.Bet;
 import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
 import javax.net.ssl.SSLContext;
@@ -38,6 +39,12 @@ public class RoulettePlayer implements Runnable{
         } catch (IOException e){
 
         } catch (InterruptedException e){}
+    }
+
+    void send(String message){
+        try {
+            client.send(message);
+        } catch (IOException e) { }
     }
 
     private void processMessage(String message) throws IOException{
@@ -88,6 +95,16 @@ public class RoulettePlayer implements Runnable{
             System.out.println("\nSERVER: " + message);
         }
     }
+
+    void processBet(Bet bet) {
+        String code = bet.getCode();
+        send(CommunicationCommands.BET + " " + playerID + " " + code);
+    }
+
+    void closeClient() {
+        client.close();
+    }
+
     public synchronized void connect(){
         if(!connected) connected = true;
         notifyAll();

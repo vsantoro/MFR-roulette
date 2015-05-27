@@ -3,7 +3,11 @@ package common;
 public class Pair extends Bet {
 
     public Pair() {
-        super("Pair");
+        this(0);
+    }
+
+    public Pair(double amount) {
+        super("Pair", amount);
     }
 
     public double winning(int number) {
@@ -17,7 +21,7 @@ public class Pair extends Bet {
         return code + " / " + amount;
     }
 
-    public String codeMessage() {
+    public String getCode() {
         return code.toUpperCase() + " " + amount;
     }
 

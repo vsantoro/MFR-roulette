@@ -4,7 +4,11 @@ package common;
 public class Manque extends Bet {
 
     public Manque() {
-        super("Manque");
+        this(0);
+    }
+
+    public Manque(double amount) {
+        super("Manque", amount);
     }
 
     public double winning(int number) {
@@ -18,7 +22,7 @@ public class Manque extends Bet {
         return code + " / " + amount;
     }
 
-    public String codeMessage() {
+    public String getCode() {
         return code.toUpperCase() + " " + amount;
     }
 

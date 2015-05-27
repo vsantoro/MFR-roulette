@@ -3,9 +3,14 @@ package common;
 
 public class Row extends Bet {
     private int row;
-    public Row()
-    {
-        super("Row");
+
+    public Row() {
+        this(0, 0);
+    }
+
+    public Row(double amount, int _row) {
+        super("Row", amount);
+        row = _row;
     }
 
     public void setRow(int _row) {
@@ -25,7 +30,7 @@ public class Row extends Bet {
     }
 
     @Override
-    public String codeMessage() {
+    public String getCode() {
         return code.toUpperCase() + "_" + row + " " + amount;
     }
 

@@ -17,4 +17,8 @@ public class Client extends SocketCommunicator
         send(message, serverAddress, SERVER_PORT);
     }
 
+    void close(){
+        datagramSocket.close();
+    }
+
 }

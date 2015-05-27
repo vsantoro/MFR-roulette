@@ -2,13 +2,17 @@ package common;
 
 public class Column extends Bet{
     private int column;
-    public Column()
-    {
-        super("Column");
+
+    public Column() {
+        this(0, 0);
     }
-    public void setColumn(int _column)
-    {
-        column=_column;
+
+    public Column(double amount, int _column) {
+        super("Column", amount);
+        column = _column;
+    }
+    public void setColumn(int _column) {
+        column = _column;
     }
 
     public double winning(int number) {
@@ -25,7 +29,7 @@ public class Column extends Bet{
     }
 
     @Override
-    public String codeMessage()
+    public String getCode()
     {
         return code.toUpperCase() + "_" + column + " " + amount;
     }
