@@ -17,4 +17,5 @@ public class CommunicationCommands {
     public static final String WIN="WIN";
     public static final String WINNUMBER = "WINNUMBER";
     public static final String BALANCE="BALANCE";
+    public static final String BUSY="BUSY";
 }

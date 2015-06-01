@@ -6,7 +6,8 @@ import java.util.logging.Logger;
 import common.Bet;
 import common.Bets;
 import common.CommunicationCommands;
-
+import roulette_server.models.Game;
+import roulette_server.controllers.InitialScreenController;
 
 public class Player implements Runnable
 {
@@ -17,14 +18,27 @@ public class Player implements Runnable
     private double money;
     private static int id=0;
     private int playerId;
+    private String name;
+    private InitialScreenController controller;
 
-    
-    public Player(PlayerProxy _playerProxy, double _startMoney, Game _game)
+    public  String getName()
+    {
+        return name;
+    }
+
+    public  double getMoney()
+    {
+        return money;
+    }
+
+    public Player(PlayerProxy _playerProxy, double _startMoney, Game _game,InitialScreenController _controller)
     {
         playerProxy = _playerProxy;
         game=_game;
         money=_startMoney;
         playerId=++id;
+        name="USER_" + playerId;
+        controller=_controller;
         playerThread.start();
     }
        
@@ -83,7 +97,9 @@ public class Player implements Runnable
                 {
                     Bet newBet=Bets.decodeBet(parts[1] + " " + parts[2]);
                     game.sendBetToCroupier(playerId,newBet);
-                    updateMoney(-Double.parseDouble(parts[2]));
+                    double bettedMoney=Double.parseDouble(parts[2]);
+                    updateMoney(-bettedMoney);
+                    controller.updateBettedMoney(playerId,bettedMoney);
                     try
                     {
                         playerProxy.send(CommunicationCommands.ACCEPT);
@@ -121,5 +137,6 @@ public class Player implements Runnable
 
     public synchronized void updateMoney(double amount){
         money += amount;
+        controller.updateBalaceMoney(playerId,money);
     }
 }

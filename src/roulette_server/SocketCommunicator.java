@@ -8,7 +8,8 @@ import java.net.SocketException;
 import java.util.Scanner;
 
 
-public abstract class SocketCommunicator {
+public abstract class SocketCommunicator
+{
     Scanner in = new Scanner(System.in);
     protected static int SERVER_PORT = 4000;
     protected static int RCV_BUFFER_LEN = 1024;

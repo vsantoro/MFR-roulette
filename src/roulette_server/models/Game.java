@@ -1,19 +1,16 @@
-package roulette_server;
+package roulette_server.models;
 
 import java.net.SocketException;
 import java.util.Hashtable;
-import java.util.Scanner;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 
 import common.CommunicationCommands;
-import roulette_server.TableWheel;
+import roulette_server.*;
 import common.Bet;
 
+import roulette_server.controllers.InitialScreenController;
+import roulette_server.views.GamePlayScreen;
 
 public class Game 
 {
@@ -22,6 +19,74 @@ public class Game
     private Croupier croupier;
     private TableWheel table;
     private Integer winningNumber;
+
+
+
+    private Server server;
+    private static int maxPlayerNumber=4;
+    private InitialScreenController controller;
+
+
+    public void setServer(int port)
+    {
+        try
+        {
+            server=new Server(this,port);
+            System.out.println("Server postavljen na vrednost " + port);
+        }
+        catch (SocketException e) {}
+    }
+
+    public void setPlayerStartMoney(double startMoney)
+    {
+        System.out.println("Pare postavljen na vrednost " + startMoney);
+
+        playerStartMoney=startMoney;
+    }
+
+    public  void setMaxPlayerNumber(int _maxPlayerNumber)
+    {
+        System.out.println("max broj igraca postavljen na vrednost " + _maxPlayerNumber);
+
+        maxPlayerNumber=_maxPlayerNumber;
+    }
+
+    public void createCroupierAndTable()
+    {
+        croupier=new Croupier(this);
+        table=new TableWheel();
+        table.setCroupier(croupier);
+        System.out.println("Postavljeni i sto i krupje");
+    }
+
+    public int getMaxPlayerNumber()
+    {
+        return maxPlayerNumber;
+    }
+
+    public void setGamePlayControllerToCroupier(InitialScreenController controller)
+    {
+        croupier.setGamePlayView(controller);
+    }
+
+    public void startCroupier()
+    {
+        croupier.startCroupier();
+    }
+
+
+    public void setGamePlayController(InitialScreenController _controller)
+    {
+        controller=_controller;
+    }
+
+    public boolean isTableFull()
+    {
+        if(players.size()==maxPlayerNumber)
+            return true;
+
+        return false;
+    }
 
     private static Game instance = null;
 
@@ -34,9 +99,9 @@ public class Game
 
     protected Game() {
         players = new Hashtable<Integer, Player>();
-        croupier = new Croupier(this);
-        table = new TableWheel();
-        table.setCroupier(croupier);
+//        croupier = new Croupier(this);
+//        table = new TableWheel();
+//        table.setCroupier(croupier);
     }
 
     public static Game getInstance() {
@@ -62,12 +127,19 @@ public class Game
 
     public synchronized double newPlayer(PlayerProxy pp)
     {
-        Player p = new Player(pp, playerStartMoney, this);
+        Player p = new Player(pp, playerStartMoney, this,controller);
         players.put(new Integer(p.getId()), p);
+        controller.insertRowInTable(p.getId(),p.getName(),p.getMoney(),0);
         return playerStartMoney;
     }
 
     public synchronized void deletePlayer(int playerId)
+    {
+        controller.removeRow(playerId);
+        players.remove(playerId);
+    }
+
+    public synchronized  void kickPlayer(int playerId)
     {
         players.remove(playerId);
     }
@@ -124,31 +196,4 @@ public class Game
         return table.getWinningNumber();
     }
 
-
-
-    //====
-    //main
-    //====
-
-    public static void main(String []args) {
-        Scanner in = new Scanner(System.in);
-        String stop = "START";
-        try {
-            System.out.println("To terminate game, input \"STOP\".");
-            Game g1=new Game();
-            Server server = new Server(g1);
-
-            while(!stop.equals("STOP")){
-                stop = in.next();
-            }
-            g1.terminateCroupier();
-            g1.terminateTable();
-            server.terminate();
-            System.out.println("Game terminated.");
-        }
-        catch (SocketException ex)
-        {
-            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
 }
