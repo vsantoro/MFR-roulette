@@ -14,7 +14,5 @@ public class MVCGamePlay
 
         InitialScreenController initialScreenController=new InitialScreenController(gameModel,initialScreenView);
         initialScreenView.setVisible(true);
-
-
     }
 }
