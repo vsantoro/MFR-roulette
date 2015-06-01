@@ -141,7 +141,7 @@ public class BoardView extends JFrame {
 
         boardPanel.setBackground(new java.awt.Color(28, 112, 34));
 
-        board.setIcon(new ImageIcon("C:\\Coding\\POOP\\roulette\\images\\BOARD.png"));
+        board.setIcon(new ImageIcon("images\\BOARD.png"));
 
         GroupLayout boardPanelLayout = new GroupLayout(boardPanel);
         boardPanel.setLayout(boardPanelLayout);
