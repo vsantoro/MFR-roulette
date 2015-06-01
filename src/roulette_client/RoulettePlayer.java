@@ -54,10 +54,7 @@ public class RoulettePlayer implements Runnable{
 
     private void processMessage(String message) throws IOException{
         if(message.startsWith(CommunicationCommands.WELCOME_MESSAGE)){
-            String []parts = message.split("\\s+");
-            playerID = Integer.parseInt(parts[1]);
             notify(message);
-//            System.out.println("\nSERVER: " + message);
         }
         else
         if(message.equals(CommunicationCommands.PYB)){
@@ -102,6 +99,10 @@ public class RoulettePlayer implements Runnable{
         if(message.startsWith(CommunicationCommands.BALANCE)){
             notify(message);
         }
+        else
+        if(message.equals(CommunicationCommands.BUSY)){
+            notify(message);
+        }
     }
 
     void processBet(Bet bet) {
@@ -144,6 +145,8 @@ public class RoulettePlayer implements Runnable{
 
     public Integer getID() { return playerID; }
 
+    public void setID(int id){ playerID = id;}
+
     public boolean isConnected(){ return connected; }
 
     public void startPlaying(){ playing = true;}
@@ -163,26 +166,5 @@ public class RoulettePlayer implements Runnable{
 
     public void notifyAboutBets(String betList){
         controller.updateBetList(betList);
-    }
-
-    public static void main(String []args) {
-        Scanner in = new Scanner(System.in);
-//        try {
-//            Menu menu = new Menu(player);
-//            boolean loop = true;
-//            while (loop){
-//                try{
-//                    menu.displayMainMenu();
-//                    loop = menu.handleMainInput(in.nextInt());
-//                } catch (InvalidIndexException e){ System.out.println(e); }
-//            }
-//
-//        } catch (SocketException ex) {
-//            Logger.getLogger(RoulettePlayer.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (UnknownHostException ex) {
-//            Logger.getLogger(RoulettePlayer.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (IOException ex) {
-//            Logger.getLogger(RoulettePlayer.class.getName()).log(Level.SEVERE, null, ex);
-//        }
     }
 }

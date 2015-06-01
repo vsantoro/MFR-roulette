@@ -94,7 +94,7 @@ public class Game
         for(Integer k : keys)
         {
             Player p=players.get(k);
-            if(p.getName()==name)
+            if(p.getName().equals(name))
                 return true;
         }
         return false;

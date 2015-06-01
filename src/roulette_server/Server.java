@@ -53,7 +53,7 @@ public class Server extends SocketCommunicator implements Runnable {
                     name="USER_" + clientID;
 
                 double playerStartMoney = game.newPlayer(pp,name);
-                pp.send(CommunicationCommands.WELCOME_MESSAGE + " " + name + " "+ game.getStartingMoney());
+                pp.send(CommunicationCommands.WELCOME_MESSAGE + " " + name + " " + clientID + " " +  game.getStartingMoney());
             }
         }
         else

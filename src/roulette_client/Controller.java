@@ -3,11 +3,9 @@ package roulette_client;
 import common.Bet;
 import common.Bets;
 import common.CommunicationCommands;
-import org.omg.CORBA.COMM_FAILURE;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.Arc2D;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -245,8 +243,13 @@ public class Controller {
     public void update(String message){
         if(message.startsWith(CommunicationCommands.WELCOME_MESSAGE)){
             String parts[] = message.split(" ");
-            boardView.updateMessageDisplay(message);
-            boardView.updateBalance(parts[2]);
+            if(parts.length == 4){
+                boardView.updateMessageDisplay(message);
+                boardView.setNickname(parts[1]);
+                roulettePlayerModel.setID(Integer.parseInt(parts[2]));
+                boardView.updateBalance(parts[3]);
+            }
+
         }
         else if(message.startsWith(CommunicationCommands.QUIT_RESPONSE)){
             boardView.updateMessageDisplay(message);
@@ -278,6 +281,9 @@ public class Controller {
         else if(message.startsWith(CommunicationCommands.WIN)){
             boardView.updateMessageDisplay(message);
         }
+        else if(message.equals(CommunicationCommands.BUSY)){
+            boardView.updateMessageDisplay(message);
+        }
     }
 
     public void updateBetList(String betList){
@@ -301,13 +307,15 @@ public class Controller {
                 serverView.dispose();
                 boardView = new BoardView();
                 boardView.addJoinButtonListener(new JoinButtonListener());
+                boardView.addStateButtonListener(new StateButtonListener());
                 boardView.addQuitButtonListener(new QuitButtonListener());
+                boardView.addExitButtonListener(new ExitButtonListener());
                 boardView.addBoardListener(new BoardListener());
                 boardView.addBetButtonListener(new BetButtonListener());
 
 
             } catch (NumberFormatException ex){
-                serverView.displayErrorMessage("To nije broj!" );
+                serverView.displayErrorMessage("Niste uneli broj!" );
             } catch (SocketException ex) {
                 serverView.displayErrorMessage("Port je zauzet!");
             } catch (UnknownHostException ex) {
@@ -322,7 +330,6 @@ public class Controller {
 
     private void updateBalance(String message){
         String parts[] = message.split(" ");
-        System.out.println(parts[1]);
         boardView.updateBalance(parts[1]);
     }
 
@@ -338,7 +345,22 @@ public class Controller {
     private class QuitButtonListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
-            roulettePlayerModel.send(CommunicationCommands.QUIT_MESSAGE + " " + roulettePlayerModel.getID());
+            if(!roulettePlayerModel.isPlaying()) roulettePlayerModel.send(CommunicationCommands.QUIT_MESSAGE + " " + roulettePlayerModel.getID());
+        }
+    }
+
+    private class StateButtonListener implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            roulettePlayerModel.send(CommunicationCommands.STATE_REQUEST + " " + roulettePlayerModel.getID());
+        }
+    }
+
+    private class ExitButtonListener implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            boardView.dispose();
+            System.exit(0);
         }
     }
 
@@ -358,7 +380,6 @@ public class Controller {
         @Override
         public void actionPerformed(ActionEvent e) {
             String betType = boardView.getCurrentBetInfo();
-            System.out.println(betType);
             String parts[] = betType.split(" ");
             String betInfo;
 
