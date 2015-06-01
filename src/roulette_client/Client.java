@@ -9,7 +9,9 @@ import java.net.SocketException;
 public class Client extends SocketCommunicator
 {
     public  InetAddress serverAddress;
-    public Client(InetAddress _serverAddress) throws SocketException {
+    public Client(InetAddress _serverAddress, int _port) throws SocketException {
+        //Ovaj deo samo za 2 razlicita racunara
+        //super(_port);
         serverAddress = _serverAddress;
     }
 
