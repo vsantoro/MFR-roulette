@@ -13,10 +13,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-/**
- *
- * @author Jovan
- */
+
 public class GamePlayScreen extends javax.swing.JFrame {
 
     /**
@@ -58,17 +55,6 @@ public class GamePlayScreen extends javax.swing.JFrame {
 
         vSeparator.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
-//        valueTextField.addActionListener(new java.awt.event.ActionListener() {
-//            public void actionPerformed(java.awt.event.ActionEvent evt) {
-//                valueTextFieldActionPerformed(evt);
-//            }
-//        });
-
-//        colorTextField.addActionListener(new java.awt.event.ActionListener() {
-//            public void actionPerformed(java.awt.event.ActionEvent evt) {
-//                colorTextFieldActionPerformed(evt);
-//            }
-//        });
 
         playersTable.setModel(new javax.swing.table.DefaultTableModel(
                 new Object [][] {
@@ -104,11 +90,6 @@ public class GamePlayScreen extends javax.swing.JFrame {
         statusBarTextField.setBackground(new java.awt.Color(204, 204, 204));
         statusBarTextField.setText("Unidentified");
         statusBarTextField.setBorder(null);
-//        statusBarTextField.addActionListener(new java.awt.event.ActionListener() {
-//            public void actionPerformed(java.awt.event.ActionEvent evt) {
-//                statusBarTextFieldActionPerformed(evt);
-//            }
-//        });
 
         javax.swing.GroupLayout statusBarPanelLayout = new javax.swing.GroupLayout(statusBarPanel);
         statusBarPanel.setLayout(statusBarPanelLayout);
@@ -132,17 +113,7 @@ public class GamePlayScreen extends javax.swing.JFrame {
         );
 
         kickButton.setText("Kick");
-//        kickButton.addActionListener(new java.awt.event.ActionListener() {
-//            public void actionPerformed(java.awt.event.ActionEvent evt) {
-//                kickButtonActionPerformed(evt);
-//            }
-//        });
 
-//        rowTextField.addActionListener(new java.awt.event.ActionListener() {
-//            public void actionPerformed(java.awt.event.ActionEvent evt) {
-//                rowTextFieldActionPerformed(evt);
-//            }
-//        });
 
         rowLabel.setText("Row:");
 
@@ -223,29 +194,6 @@ public class GamePlayScreen extends javax.swing.JFrame {
         pack();
     }// </editor-fold>
 
-//    private void valueTextFieldActionPerformed(java.awt.event.ActionEvent evt) {
-//        // TODO add your handling code here:
-//    }
-//
-//    private void statusBarTextFieldActionPerformed(java.awt.event.ActionEvent evt) {
-//        // TODO add your handling code here:
-//    }
-//
-//    private void colorTextFieldActionPerformed(java.awt.event.ActionEvent evt) {
-//        // TODO add your handling code here:
-//    }
-//
-//    private void rowTextFieldActionPerformed(java.awt.event.ActionEvent evt) {
-//        // TODO add your handling code here:
-//    }
-//
-//    private void kickButtonActionPerformed(java.awt.event.ActionEvent evt)
-//    {
-//        DefaultTableModel model=(DefaultTableModel) playersTable.getModel();
-//        model.removeRow(playersTable.getSelectedRow());
-//    }
-//
-//    //obrisati listenere
 
     public synchronized void setToStatusBarTextField(String info)
     {
@@ -393,40 +341,7 @@ public class GamePlayScreen extends javax.swing.JFrame {
             }
         }
     }
-    /**
-     * @param args the command line arguments
-     */
-//    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-//         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(GamePlayScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(GamePlayScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(GamePlayScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(GamePlayScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//        //</editor-fold>
-//
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new GamePlayScreen().setVisible(true);
-//            }
-//        });
-//    }
+
 
     // Variables declaration - do not modify
     private javax.swing.JLabel colorLabel;
