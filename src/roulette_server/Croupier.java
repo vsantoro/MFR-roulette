@@ -2,11 +2,12 @@ package roulette_server;
 
 import java.util.Hashtable;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 import common.Bet;
 import java.util.LinkedList;
 import common.CommunicationCommands;
+import roulette_server.models.Game;
+import roulette_server.controllers.InitialScreenController;
 
 
 public class Croupier implements Runnable
@@ -18,9 +19,20 @@ public class Croupier implements Runnable
     private Hashtable<Integer,LinkedList<Bet>> bets;
     private static final Double[] rotationSpeeds;
 
-    private static final long pybTime=15000;
-    private static final long matchSeprationTime=15000;
+    private static final long pybTime=35000;
+    private static final long matchSeprationTime=7000;
 
+    private InitialScreenController controller;
+
+    public void setGamePlayView(InitialScreenController _controller)
+    {
+        controller=_controller;
+    }
+
+    public void startCroupier()
+    {
+        croupierThread.start();
+    }
     //==========================
     //constructor and terminator
     //==========================
@@ -39,7 +51,7 @@ public class Croupier implements Runnable
         croupierThread = new Thread(this);
         spinning = false;
         bets = new Hashtable<Integer,LinkedList<Bet>>();
-        croupierThread.start();
+       // croupierThread.start();
     }
 
     public void terminate() {
@@ -99,6 +111,7 @@ public class Croupier implements Runnable
                 sum += player_bet.winning(winningNumber);
             }
             game.updatePlayerMoney(key, sum);
+            controller.anullBettedMoney(key);
         }
     }
 
@@ -115,17 +128,22 @@ public class Croupier implements Runnable
         {
             while (!Thread.interrupted())
             {
+
                 acceptingBets = true;
                 game.sendMessageToAllPlayers(CommunicationCommands.PYB);
                 System.out.println("CROUPIER: ACCEPTING NEW BETS!");
+                controller.sendToNumberFields(-2);
+                controller.sendToStatusBar("Accepting new bets...");
 
                 Thread.sleep(pybTime);
 
                 System.out.println("CROUPIER: NOT ACCEPTING NEW BETS!");
+                controller.sendToStatusBar("Not accepting new bets...");
                 acceptingBets = false;
                 game.sendMessageToAllPlayers(CommunicationCommands.RNVP);
                 double newSpeed=rotationSpeeds[(int)(Math.random()*300)];
                 System.out.println("CROUPIER: STARTING GAME NO. " + game_no + "");
+                controller.sendToNumberFields(-1);
                 spinWheel(newSpeed);
                 synchronized (this)
                 {
@@ -133,11 +151,13 @@ public class Croupier implements Runnable
                         wait();
                 }
                 System.out.println("CROUPIER: GAME NO. " + game_no + " FINISHED. WINNING NUMBER: " + game.getWinningNumber());
+                controller.sendToNumberFields(game.getWinningNumber());
                 game.sendMessageToAllPlayers(CommunicationCommands.WINNUMBER + " " + game.getWinningNumber());
                 game_no++;
                 calculateWinnings();
                 bets.clear();
                 System.out.println("NEW MATCH STARTS IN " + matchSeprationTime/1000);
+                controller.sendToStatusBar("New match starts in " + matchSeprationTime/1000 + "s...");
                 Thread.sleep(matchSeprationTime);
             }
     	}

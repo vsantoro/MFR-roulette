@@ -1,17 +1,11 @@
 package roulette_server;
 
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
-
-import javax.annotation.processing.SupportedSourceVersion;
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.InetAddress;
-import java.net.Socket;
 import java.net.SocketException;
-import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.Scanner;
+
 import common.CommunicationCommands;
+import roulette_server.models.Game;
 
 
 public class Server extends SocketCommunicator implements Runnable {
@@ -20,9 +14,10 @@ public class Server extends SocketCommunicator implements Runnable {
     private int clientID;
     private Game game;
 
-    public Server(Game _game) throws SocketException
+    public Server(Game _game,int portNumber) throws SocketException
     {
-        super(SERVER_PORT);
+        //super(SERVER_PORT);
+        super(portNumber);
         game = _game;
         serverThread.start();
     }
@@ -42,12 +37,24 @@ public class Server extends SocketCommunicator implements Runnable {
 
     private void processMessage(String message) throws IOException {
 
-        if( message.equals(CommunicationCommands.JOIN_MESSAGE) ) {
+        if( message.startsWith(CommunicationCommands.JOIN_MESSAGE) ) {
             PlayerProxy pp = new PlayerProxy(this, receivePacket.getAddress(), receivePacket.getPort());
-            clientID++;
-            connectedPlayers.put(clientID, pp);
-            double playerStartMoney = game.newPlayer(pp);
-            pp.send(CommunicationCommands.WELCOME_MESSAGE + " " + clientID + " "+ game.getStartingMoney());
+            if(game.isTableFull()==true)
+            {
+                pp.send(CommunicationCommands.BUSY);
+            }
+            else
+            {
+                String[] parts=message.split(" ");
+                clientID++;
+                connectedPlayers.put(clientID, pp);
+                String name=parts[1];
+                if(game.isNameOccupied(name))
+                    name="USER_" + clientID;
+
+                double playerStartMoney = game.newPlayer(pp,name);
+                pp.send(CommunicationCommands.WELCOME_MESSAGE + " " + name + " "+ game.getStartingMoney());
+            }
         }
         else
         if( message.startsWith(CommunicationCommands.QUIT_MESSAGE) ) {
