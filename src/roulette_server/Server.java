@@ -37,7 +37,7 @@ public class Server extends SocketCommunicator implements Runnable {
 
     private void processMessage(String message) throws IOException {
 
-        if( message.equals(CommunicationCommands.JOIN_MESSAGE) ) {
+        if( message.startsWith(CommunicationCommands.JOIN_MESSAGE) ) {
             PlayerProxy pp = new PlayerProxy(this, receivePacket.getAddress(), receivePacket.getPort());
             if(game.isTableFull()==true)
             {
@@ -45,10 +45,15 @@ public class Server extends SocketCommunicator implements Runnable {
             }
             else
             {
+                String[] parts=message.split(" ");
                 clientID++;
                 connectedPlayers.put(clientID, pp);
-                double playerStartMoney = game.newPlayer(pp);
-                pp.send(CommunicationCommands.WELCOME_MESSAGE + " " + clientID + " "+ game.getStartingMoney());
+                String name=parts[1];
+                if(game.isNameOccupied(name))
+                    name="USER_" + clientID;
+
+                double playerStartMoney = game.newPlayer(pp,name);
+                pp.send(CommunicationCommands.WELCOME_MESSAGE + " " + name + " "+ game.getStartingMoney());
             }
         }
         else

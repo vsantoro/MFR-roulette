@@ -88,6 +88,18 @@ public class Game
         return false;
     }
 
+    public boolean isNameOccupied(String name)
+    {
+        Set<Integer> keys=players.keySet();
+        for(Integer k : keys)
+        {
+            Player p=players.get(k);
+            if(p.getName()==name)
+                return true;
+        }
+        return false;
+    }
+
     private static Game instance = null;
 
 
@@ -125,9 +137,9 @@ public class Game
     //player management
     //=================
 
-    public synchronized double newPlayer(PlayerProxy pp)
+    public synchronized double newPlayer(PlayerProxy pp,String _name)
     {
-        Player p = new Player(pp, playerStartMoney, this,controller);
+        Player p = new Player(pp, playerStartMoney, this,controller,_name);
         players.put(new Integer(p.getId()), p);
         controller.insertRowInTable(p.getId(),p.getName(),p.getMoney(),0);
         return playerStartMoney;

@@ -31,13 +31,14 @@ public class Player implements Runnable
         return money;
     }
 
-    public Player(PlayerProxy _playerProxy, double _startMoney, Game _game,InitialScreenController _controller)
+    public Player(PlayerProxy _playerProxy, double _startMoney, Game _game,InitialScreenController _controller,String _name)
     {
         playerProxy = _playerProxy;
         game=_game;
         money=_startMoney;
         playerId=++id;
-        name="USER_" + playerId;
+        //name="USER_" + playerId;
+        name=_name;
         controller=_controller;
         playerThread.start();
     }
