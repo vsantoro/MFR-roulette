@@ -110,7 +110,7 @@ public class GameView extends javax.swing.JFrame {
         rowTextField.setHorizontalAlignment(JTextField.CENTER);
 
         kickButton.setText("Kick");
-        jLabel2.setIcon(new javax.swing.ImageIcon("images/roulette2.png","roulette")); // NOI18N
+        jLabel2.setIcon(new javax.swing.ImageIcon("images/wheel.png","roulette")); // NOI18N
 
         javax.swing.GroupLayout statusBarPanelLayout = new javax.swing.GroupLayout(statusBarPanel);
         statusBarPanel.setLayout(statusBarPanelLayout);
@@ -132,11 +132,6 @@ public class GameView extends javax.swing.JFrame {
                                         .addComponent(statusBarTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        kickButton.setText("Kick");
-
-
-        jLabel2.setIcon(new javax.swing.ImageIcon("images/roulette2.png","roulette")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
