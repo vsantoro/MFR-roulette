@@ -1,5 +1,6 @@
 package common;
 
+//Messages used for client-server communication
 
 public class CommunicationCommands {
     private CommunicationCommands() { }
@@ -9,8 +10,8 @@ public class CommunicationCommands {
     public static final String QUIT_RESPONSE = "BYE";
     public static final String BET = "BET";
     public static final String STATE_REQUEST = "STATE";
-    public static final String PYB="PYB";
-    public static final String RNVP="RNVP";
+    public static final String PYB="PYB";       //place your bets
+    public static final String RNVP="RNVP";     //no more bets (Rien ne va plus)
     public static final String REJECT="REJECT";
     public static final String FUND="FUND";
     public static final String ACCEPT="ACCEPT";

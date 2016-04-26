@@ -1,20 +1,17 @@
-package roulette_server;
+package server.models;
 
-import roulette_server.Croupier;
+import server.models.Croupier;
 
-import java.lang.reflect.Modifier;
-
-public class TableWheel implements Runnable
+public class SpinningWheel implements Runnable
 {
-    private Thread tableThread=new Thread(this);
-    private Croupier croupier;
-    private boolean spinning;
-    private int winningNumber;
-    private double startingSpeed;
-    private double rotationAngle;
-    private static final int[] numberArray;
-    private static final double fieldAngle = 9.73;
 
+    //angle of a one field on a spinning wheel
+    private static final double FIELD_ANGLE = 9.73;
+
+    //contains roulette wheel numbers in the right order
+    private static final int[] numberArray;
+
+    //initialization of the roulette wheel numbers
     static
     {
         numberArray=new int[37];
@@ -56,14 +53,24 @@ public class TableWheel implements Runnable
         numberArray[35]=31;
         numberArray[36]=9;
     }
-    //==========================
-    //constructor and terminator
-    //==========================
 
-    public TableWheel()
+    //separate thread for the wheel activity
+    private Thread tableThread=new Thread(this);
+
+    //registered croupier
+    private Croupier croupier;
+    private boolean isSpinning;
+    private int winningNumber;
+
+    //required for the implementation of physics of a table rotation
+    private double startingSpeed;
+    private double rotationAngle;
+
+
+    public SpinningWheel()
     {
         croupier = null;
-        spinning = false;
+        isSpinning = false;
         rotationAngle = 0;
         tableThread.start();
     }
@@ -72,43 +79,33 @@ public class TableWheel implements Runnable
         tableThread.interrupt();
     }
 
-
-
-    //===================
-    //croupier management
-    //===================
+    //Croupier setter/getter
 
     public void setCroupier(Croupier _croupier)
     {
         croupier=_croupier;
     }
 
-    public Croupier getCroupier()
+
+    public synchronized void startSpinning(double speed)
     {
-        return croupier;
-    }
-
-
-
-    //================
-    //table management
-    //================
-
-    public synchronized void startSpinning(double speed) {
         startingSpeed = speed;
-        spinning = true;
+        isSpinning = true;
         notify();
     }
 
-    public synchronized void stopSpinning() {
+    //pauses thread execution and updates the croupier
+    private synchronized void stopSpinning()
+    {
         rotationAngle = 0;
-        croupier.wheelStopped();
-        spinning = false;
+        croupier.registerWheelStopping();
+        isSpinning = false;
     }
 
+    //calculates current number based on rotation and field angle
     public int calculateNumber()
     {
-        int number=(int)Math.floor(((int) rotationAngle % 360) / fieldAngle);
+        int number=(int)Math.floor(((int) rotationAngle % 360) / FIELD_ANGLE);
         return number;
     }
 
@@ -118,11 +115,6 @@ public class TableWheel implements Runnable
     }
 
 
-
-    //===
-    //run
-    //===
-
     public void run()
     {
         try
@@ -131,11 +123,17 @@ public class TableWheel implements Runnable
             {
                 synchronized (this)
                 {
-                    while(!spinning)
+                    while(!isSpinning)
                         wait();
                 }
                 double tempSpeed=startingSpeed;
                 int i=1;
+
+                /*
+                decreases speed until it is lower than 1% of the starting speed, calculates
+                rotation angle
+                */
+
                 while(tempSpeed>=(startingSpeed*0.01))
                 {
                     Thread.sleep(10);

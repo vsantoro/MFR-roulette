@@ -3,17 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package roulette_server.views;
+package server.views;
 
 import javax.swing.*;
 
 
-public class InitialScreen extends javax.swing.JFrame {
+public class SetupView extends javax.swing.JFrame {
 
-    /**
-     * Creates new form start2
-     */
-    public InitialScreen() {
+    public SetupView() {
         initComponents();
     }
 
@@ -29,14 +26,11 @@ public class InitialScreen extends javax.swing.JFrame {
         headerLabel = new javax.swing.JLabel();
         portTextField = new javax.swing.JTextField();
         startingAmountTextField = new javax.swing.JTextField();
-        spinningTimeTextField = new javax.swing.JTextField();
         maxPlayerNumberTextField = new javax.swing.JTextField();
         portLabel = new javax.swing.JLabel();
         startingAmountLabel = new javax.swing.JLabel();
-        spinningTimeLabel = new javax.swing.JLabel();
         maxPlayersLabel = new javax.swing.JLabel();
         dollarSignLabel = new javax.swing.JLabel();
-        secondsLabel = new javax.swing.JLabel();
         playersLabel = new javax.swing.JLabel();
         confirmButton = new javax.swing.JButton();
 
@@ -44,13 +38,12 @@ public class InitialScreen extends javax.swing.JFrame {
         setResizable(false);
 
         headerLabel.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        headerLabel.setText("Initial information");
+        headerLabel.setText("Initial Setup");
 
         portTextField.setText("4000");
 
         startingAmountTextField.setText("200");
 
-        spinningTimeTextField.setText("10");
 
         maxPlayerNumberTextField.setText("5");
 
@@ -58,13 +51,9 @@ public class InitialScreen extends javax.swing.JFrame {
 
         startingAmountLabel.setText("Starting amount:");
         
-        spinningTimeLabel.setText("Spinning time:");
-
-        maxPlayersLabel.setText("Max. pleyers:");
+        maxPlayersLabel.setText("Max. players:");
 
         dollarSignLabel.setText("$");
-
-        secondsLabel.setText("seconds");
 
         playersLabel.setText("players");
 
@@ -84,7 +73,6 @@ public class InitialScreen extends javax.swing.JFrame {
                                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                         .addComponent(portLabel)
                                                         .addComponent(startingAmountLabel)
-                                                        .addComponent(spinningTimeLabel)
                                                         .addComponent(maxPlayersLabel))
                                                 .addGap(55, 55, 55)
                                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -97,10 +85,6 @@ public class InitialScreen extends javax.swing.JFrame {
                                                                                 .addComponent(startingAmountTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                                                 .addComponent(dollarSignLabel))
-                                                                        .addGroup(layout.createSequentialGroup()
-                                                                                .addComponent(spinningTimeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                                .addComponent(secondsLabel))
                                                                         .addGroup(layout.createSequentialGroup()
                                                                                 .addComponent(maxPlayerNumberTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -130,11 +114,6 @@ public class InitialScreen extends javax.swing.JFrame {
                                                         .addComponent(dollarSignLabel))
                                                 .addGap(28, 28, 28)
                                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                                        .addComponent(spinningTimeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(spinningTimeLabel)
-                                                        .addComponent(secondsLabel))
-                                                .addGap(26, 26, 26)
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                                         .addComponent(maxPlayerNumberTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(playersLabel))))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
@@ -151,23 +130,18 @@ public class InitialScreen extends javax.swing.JFrame {
         confirmButton.addActionListener(evt);
     }
 
-    public int getPortNumberValue()
+    public int getPortNumber()
     {
         return Integer.parseInt(portTextField.getText());
     }
 
-    public double getStartingAmountValue()
+    public double getStartingAmount()
     {
         return Double.parseDouble(startingAmountTextField.getText());
 
     }
 
-    public int getSpinningTimeValue()
-    {
-        return Integer.parseInt(spinningTimeTextField.getText());
-    }
-
-    public int getMaxPlayerNumberValue()
+    public int getMaxPlayerNumber()
     {
         return Integer.parseInt(maxPlayerNumberTextField.getText());
     }
@@ -177,21 +151,16 @@ public class InitialScreen extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this,errorMessage);
     }
 
-
-
     // Variables declaration - do not modify                     
     private javax.swing.JButton confirmButton;
     private javax.swing.JLabel headerLabel;
     private javax.swing.JLabel portLabel;
     private javax.swing.JLabel startingAmountLabel;
-    private javax.swing.JLabel spinningTimeLabel;
     private javax.swing.JLabel maxPlayersLabel;
     private javax.swing.JLabel dollarSignLabel;
-    private javax.swing.JLabel secondsLabel;
     private javax.swing.JLabel playersLabel;
     private javax.swing.JTextField portTextField;
     private javax.swing.JTextField startingAmountTextField;
-    private javax.swing.JTextField spinningTimeTextField;
     private javax.swing.JTextField maxPlayerNumberTextField;
     // End of variables declaration                   
 }

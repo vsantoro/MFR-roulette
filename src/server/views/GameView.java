@@ -1,19 +1,13 @@
-package roulette_server.views;
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+package server.views;
 
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 
 
-public class GamePlayScreen extends javax.swing.JFrame {
+public class GameView extends javax.swing.JFrame {
 
-    /**
-     * Creates new form GamePlayScreen
-     */
-    public GamePlayScreen() {
+    public GameView() {
         initComponents();
     }
 
@@ -26,6 +20,8 @@ public class GamePlayScreen extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void initComponents() {
 
+        setResizable(false);
+        //initialization of components
         vSeparator = new javax.swing.JSeparator();
         valueTextField = new javax.swing.JTextField();
         colorTextField = new javax.swing.JTextField();
@@ -45,8 +41,9 @@ public class GamePlayScreen extends javax.swing.JFrame {
         columnLabel = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
 
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Roulette");
+        setTitle("Speed Roulette");
 
         vSeparator.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
@@ -72,12 +69,14 @@ public class GamePlayScreen extends javax.swing.JFrame {
         playersTable.setRowHeight(25);
         jScrollPane1.setViewportView(playersTable);
 
+        //setting up labels
         valueLabel.setText("Value:");
-
         parityLabel.setText("Parity:");
-
         colorLabel.setText("Color:");
+        rowLabel.setText("Row:");
+        columnLabel.setText("Column:");
 
+        //setting up status bar
         statusBarPanel.setBackground(new java.awt.Color(204, 204, 204));
 
         statusBarLabel.setText("Status:");
@@ -87,6 +86,31 @@ public class GamePlayScreen extends javax.swing.JFrame {
         statusBarTextField.setText("Unidentified");
         statusBarTextField.setBorder(null);
 
+
+        //disabling field input
+
+        valueTextField.setEnabled(false);
+        parityTextField.setEnabled(false);
+        colorTextField.setEnabled(false);
+        columnTextField.setEnabled(false);
+        rowTextField.setEnabled(false);
+
+        //setting disabled text color
+        valueTextField.setDisabledTextColor(Color.BLACK);
+        parityTextField.setDisabledTextColor(Color.BLACK);
+        colorTextField.setDisabledTextColor(Color.BLACK);
+        columnTextField.setDisabledTextColor(Color.BLACK);
+        rowTextField.setDisabledTextColor(Color.BLACK);
+
+        //setting up field alignment
+        valueTextField.setHorizontalAlignment(JTextField.CENTER);
+        parityTextField.setHorizontalAlignment(JTextField.CENTER);
+        colorTextField.setHorizontalAlignment(JTextField.CENTER);
+        columnTextField.setHorizontalAlignment(JTextField.CENTER);
+        rowTextField.setHorizontalAlignment(JTextField.CENTER);
+
+        kickButton.setText("Kick");
+        jLabel2.setIcon(new javax.swing.ImageIcon("images/roulette2.png","roulette")); // NOI18N
 
         javax.swing.GroupLayout statusBarPanelLayout = new javax.swing.GroupLayout(statusBarPanel);
         statusBarPanel.setLayout(statusBarPanelLayout);
@@ -111,10 +135,6 @@ public class GamePlayScreen extends javax.swing.JFrame {
 
         kickButton.setText("Kick");
 
-
-        rowLabel.setText("Row:");
-
-        columnLabel.setText("Column:");
 
         jLabel2.setIcon(new javax.swing.ImageIcon("images/roulette2.png","roulette")); // NOI18N
 
@@ -200,15 +220,12 @@ public class GamePlayScreen extends javax.swing.JFrame {
         pack();
     }// </editor-fold>                        
 
-
-
-
-    public synchronized void setToStatusBarTextField(String info)
+    public synchronized void setStatus(String info)
     {
         statusBarTextField.setText(info);
     }
 
-    public synchronized void setToNumberInfoFields(int number)
+    public synchronized void setFields(int number)
     {
         if(number==-1)
         {
@@ -224,6 +241,7 @@ public class GamePlayScreen extends javax.swing.JFrame {
             valueTextField.setText("");
             parityTextField.setText("");
             colorTextField.setText("");
+            colorTextField.setBackground(Color.white);
             rowTextField.setText("");
             columnTextField.setText("");
         }
@@ -231,37 +249,45 @@ public class GamePlayScreen extends javax.swing.JFrame {
         {
             valueTextField.setText(Integer.toString(number));
 
-            //Parnost
+            //parity
             if(number%2==0)
                 parityTextField.setText("Even");
             else
                 parityTextField.setText("Odd");
 
-            //Boja
+            //emptying color text field
+            colorTextField.setText("");
+
+            //color
             if(number==0)
-                colorTextField.setText("Green");
+                //colorTextField.setText("Green");
+                colorTextField.setBackground(Color.green);
             else
             {
                 int color=number%18;
                 if(color==0)
-                    colorTextField.setText("Red");
+                    colorTextField.setBackground(Color.red);
+
                 else
                 if(color<=10 && color%2==1)
-                    colorTextField.setText("Red");
+                 colorTextField.setBackground(Color.red);
+
                 else
                 if(color>10 && color%2==0)
-                    colorTextField.setText("Red");
+                    colorTextField.setBackground(Color.red);
+
                 else
-                    colorTextField.setText("Black");
+                    colorTextField.setBackground(Color.black);
+
             }
 
-            //Red
+            //Row
             if(number==0)
                 rowTextField.setText("/");
             else
                 rowTextField.setText(Integer.toString((int)(Math.ceil(number / 3.0))));
 
-            //Kolona
+            //Column
             if(number==0)
                 columnTextField.setText("/");
             else
@@ -275,13 +301,13 @@ public class GamePlayScreen extends javax.swing.JFrame {
 
     }
 
-    public synchronized void addRowToTable(int id,String name,double balance,double betted)
+    public synchronized void addTableRow(int id, String name, double balance, double betted)
     {
         DefaultTableModel model=(DefaultTableModel) playersTable.getModel();
         model.addRow(new Object[]{id,name,balance,betted});
     }
 
-    public synchronized void addKickButtonActionListener(java.awt.event.ActionListener evt)
+    public synchronized void addKickButtonListener(java.awt.event.ActionListener evt)
     {
         kickButton.addActionListener(evt);
     }
@@ -295,7 +321,7 @@ public class GamePlayScreen extends javax.swing.JFrame {
         return id;
     }
 
-    public synchronized void updateBettedMoney(int id,double money)
+    public synchronized void updateBettingMoney(int id, double newAmount)
     {
         int nbOfRows=playersTable.getRowCount();
         for(int i=0;i<nbOfRows;i++)
@@ -303,27 +329,27 @@ public class GamePlayScreen extends javax.swing.JFrame {
             if(Integer.parseInt(playersTable.getValueAt(i,0).toString())==id)
             {
                 double amount=0;
-                amount+=Double.parseDouble(playersTable.getValueAt(i, 3).toString()) + money;
+                amount+=Double.parseDouble(playersTable.getValueAt(i, 3).toString()) + newAmount;
                 playersTable.setValueAt(amount,i,3);
                 break;
             }
         }
     }
 
-    public synchronized void upadateBalanceMoney(int id, double money)
+    public synchronized void updateBalanceMoney(int id, double newAmount)
     {
         int nbOfRows=playersTable.getRowCount();
         for(int i=0;i<nbOfRows;i++)
         {
             if(Integer.parseInt(playersTable.getValueAt(i, 0).toString())==id)
             {
-                playersTable.setValueAt(money,i,2);
+                playersTable.setValueAt(newAmount,i,2);
                 break;
             }
         }
     }
 
-    public synchronized  void removeRow(int id)
+    public synchronized void removeTableRow(int id)
     {
         DefaultTableModel model=(DefaultTableModel) playersTable.getModel();
         int nbOfRows=playersTable.getRowCount();
@@ -337,7 +363,7 @@ public class GamePlayScreen extends javax.swing.JFrame {
         }
     }
 
-    public synchronized  void anullBettedMoney(int id)
+    public synchronized  void cancelBettingMoney(int id)
     {
         int nbOfRows=playersTable.getRowCount();
         for(int i=0;i<nbOfRows;i++)

@@ -3,9 +3,9 @@
     <output-path>$PROJECT_DIR$/out/artifacts/server</output-path>
     <root id="archive" name="roulette_final.jar">
       <element id="directory" name="META-INF">
-        <element id="file-copy" path="$PROJECT_DIR$/src/roulette_server/META-INF/MANIFEST.MF" />
+        <element id="file-copy" path="$PROJECT_DIR$/src/server/META-INF/MANIFEST.MF" />
       </element>
-      <element id="module-output" name="roulette_final" />
+      <element id="module-output" name="speed-roulette" />
     </root>
   </artifact>
 </component>

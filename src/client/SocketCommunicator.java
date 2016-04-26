@@ -1,4 +1,4 @@
-package roulette_client;
+package client;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -7,7 +7,9 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.util.Scanner;
 
-
+/*
+class SocketCommunicator provides communication between clien and server application
+ */
 public abstract class SocketCommunicator {
     Scanner in = new Scanner(System.in);
     protected static int SERVER_PORT = 4000;

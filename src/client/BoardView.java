@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package roulette_client;
+package client;
 
 import javax.swing.*;
 import java.awt.*;
@@ -141,7 +141,7 @@ public class BoardView extends JFrame {
 
         boardPanel.setBackground(new java.awt.Color(28, 112, 34));
 
-        board.setIcon(new ImageIcon("images\\BOARD.png"));
+        board.setIcon(new ImageIcon("images/BOARD.png"));
 
         GroupLayout boardPanelLayout = new GroupLayout(boardPanel);
         boardPanel.setLayout(boardPanelLayout);

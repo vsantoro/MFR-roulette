@@ -1,8 +1,7 @@
-package roulette_client;
+package client;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
 
 public class ServerSettingsView extends JFrame {
 

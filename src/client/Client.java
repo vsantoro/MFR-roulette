@@ -1,4 +1,4 @@
-package roulette_client;
+package client;
 
 
 import java.io.IOException;
@@ -10,7 +10,7 @@ public class Client extends SocketCommunicator
 {
     public  InetAddress serverAddress;
     public Client(InetAddress _serverAddress, int _port) throws SocketException {
-        //Ovaj deo samo za 2 razlicita racunara
+        //For 2 different computers
         //super(_port);
         serverAddress = _serverAddress;
     }

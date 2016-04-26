@@ -1,4 +1,4 @@
-package roulette_server.models;
+package server.models;
 
 import java.net.SocketException;
 import java.util.Hashtable;
@@ -6,25 +6,25 @@ import java.util.Set;
 
 
 import common.CommunicationCommands;
-import roulette_server.*;
+import server.*;
 import common.Bet;
 
-import roulette_server.controllers.InitialScreenController;
-import roulette_server.views.GamePlayScreen;
+import server.controllers.Controller;
 
+/*
+Singleton class that implements main game activity
+ */
 public class Game 
 {
-    private double playerStartMoney = 200;
+    private static Game instance = null;
+    private double startingAmount = 200;
     private Hashtable<Integer, Player> players;
     private Croupier croupier;
-    private TableWheel table;
-    private Integer winningNumber;
-
-
+    private SpinningWheel wheel;
 
     private Server server;
     private static int maxPlayerNumber=4;
-    private InitialScreenController controller;
+    private Controller controller;
 
 
     public void setServer(int port)
@@ -32,31 +32,32 @@ public class Game
         try
         {
             server=new Server(this,port);
-            System.out.println("Server postavljen na vrednost " + port);
+            System.out.println("Port value: " + port);
         }
         catch (SocketException e) {}
     }
 
-    public void setPlayerStartMoney(double startMoney)
+    public void setStartingAmount(double startMoney)
     {
-        System.out.println("Pare postavljen na vrednost " + startMoney);
+        System.out.println("Player's starting money: " + startMoney);
 
-        playerStartMoney=startMoney;
+        startingAmount =startMoney;
     }
 
-    public  void setMaxPlayerNumber(int _maxPlayerNumber)
+    public void setMaxPlayerNumber(int _maxPlayerNumber)
     {
-        System.out.println("max broj igraca postavljen na vrednost " + _maxPlayerNumber);
+        System.out.println("Maximum number of players: " + _maxPlayerNumber);
 
         maxPlayerNumber=_maxPlayerNumber;
     }
 
-    public void createCroupierAndTable()
+    public void createCroupierAndWheel()
     {
         croupier=new Croupier(this);
-        table=new TableWheel();
-        table.setCroupier(croupier);
-        System.out.println("Postavljeni i sto i krupje");
+        wheel =new SpinningWheel();
+        wheel.setCroupier(croupier);
+
+        System.out.println("Croupier and wheel are ready!");
     }
 
     public int getMaxPlayerNumber()
@@ -64,22 +65,23 @@ public class Game
         return maxPlayerNumber;
     }
 
-    public void setGamePlayControllerToCroupier(InitialScreenController controller)
+    public void setGamePlayControllerToCroupier(Controller controller)
     {
-        croupier.setGamePlayView(controller);
+        croupier.setController(controller);
     }
 
     public void startCroupier()
     {
-        croupier.startCroupier();
+        croupier.start();
     }
 
 
-    public void setGamePlayController(InitialScreenController _controller)
+    public void setGamePlayController(Controller _controller)
     {
         controller=_controller;
     }
 
+    //checks whether there is place for more players
     public boolean isTableFull()
     {
         if(players.size()==maxPlayerNumber)
@@ -88,6 +90,7 @@ public class Game
         return false;
     }
 
+    //checks whether a new player's name is occupied
     public boolean isNameOccupied(String name)
     {
         Set<Integer> keys=players.keySet();
@@ -100,10 +103,6 @@ public class Game
         return false;
     }
 
-    private static Game instance = null;
-
-
-
 
     //=====================================
     //singleton constructor and terminators
@@ -111,11 +110,9 @@ public class Game
 
     protected Game() {
         players = new Hashtable<Integer, Player>();
-//        croupier = new Croupier(this);
-//        table = new TableWheel();
-//        table.setCroupier(croupier);
     }
 
+    //gets a singleton instance
     public static Game getInstance() {
         if (instance == null) {
             instance = new Game();
@@ -123,12 +120,12 @@ public class Game
         return instance;
     }
 
-    public void terminateCroupier() {
+    private void terminateCroupier() {
         croupier.terminate();
     }
 
-    public void terminateTable() {
-        table.terminate();
+    private void terminateTable() {
+        wheel.terminate();
     }
 
 
@@ -137,35 +134,41 @@ public class Game
     //player management
     //=================
 
-    public synchronized double newPlayer(PlayerProxy pp,String _name)
+    //adds a new player to the game
+    public synchronized double addPlayer(PlayerProxy pp, String _name)
     {
-        Player p = new Player(pp, playerStartMoney, this,controller,_name);
+        Player p = new Player(pp, startingAmount, this,controller,_name);
         players.put(new Integer(p.getId()), p);
-        controller.insertRowInTable(p.getId(),p.getName(),p.getMoney(),0);
-        return playerStartMoney;
+        controller.addTableRow(p.getId(),p.getName(),p.getMoney(),0);
+        return startingAmount;
     }
 
-    public synchronized void deletePlayer(int playerId)
+    //removes player from the game
+    public synchronized void removePlayer(int playerId)
     {
-        controller.removeRow(playerId);
+        controller.removeTableRow(playerId);
         players.remove(playerId);
     }
 
+    //kicks out player from the game
     public synchronized  void kickPlayer(int playerId)
     {
+        Player kickedPlayer = players.get(playerId);
+        kickedPlayer.sendMessage(CommunicationCommands.QUIT_RESPONSE);
         players.remove(playerId);
     }
 
     public double getStartingMoney()
     {
-        return playerStartMoney;
+        return startingAmount;
     }
 
-    public synchronized void updatePlayerMoney(int id, double money) {
+
+    synchronized void updatePlayerMoney(int id, double money) {
         Player player = players.get(id);
         player.updateMoney(money);
-        if(money > 0) player.reportMessage(CommunicationCommands.WIN + " " + money);
-        else player.reportMessage(CommunicationCommands.WIN + " " + 0);
+        if(money > 0) player.sendMessage(CommunicationCommands.WIN + " " + money);
+        else player.sendMessage(CommunicationCommands.WIN + " " + 0);
     }
 
 
@@ -174,13 +177,13 @@ public class Game
     //communication
     //=============
 
-    public void sendMessageToAllPlayers(String message)
+    void sendMessageToAllPlayers(String message)
     {
         Set<Integer> keys=players.keySet();
         for(Integer k : keys)
         {
             Player p=players.get(k);
-            p.reportMessage(message);
+            p.sendMessage(message);
         }
     }
 
@@ -198,14 +201,18 @@ public class Game
         croupier.addNewBet(playerId, newBet);
     }
 
-    public synchronized void spinWheel(double speed)
+    synchronized void spinWheel(double speed)
     {
-        table.startSpinning(speed);
+        wheel.startSpinning(speed);
     }
 
-    public int getWinningNumber()
+    public boolean isSpinning()
     {
-        return table.getWinningNumber();
+        return croupier.isSpinning();
+    }
+    int getWinningNumber()
+    {
+        return wheel.getWinningNumber();
     }
 
 }

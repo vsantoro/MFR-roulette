@@ -1,4 +1,4 @@
-package roulette_server;
+package server;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -6,8 +6,8 @@ import java.util.logging.Logger;
 import common.Bet;
 import common.Bets;
 import common.CommunicationCommands;
-import roulette_server.models.Game;
-import roulette_server.controllers.InitialScreenController;
+import server.models.Game;
+import server.controllers.Controller;
 
 public class Player implements Runnable
 {
@@ -19,7 +19,13 @@ public class Player implements Runnable
     private static int id=0;
     private int playerId;
     private String name;
-    private InitialScreenController controller;
+    private Controller controller;
+
+
+    private void quitGame()
+    {
+        game.removePlayer(playerId);
+    }
 
     public  String getName()
     {
@@ -31,7 +37,7 @@ public class Player implements Runnable
         return money;
     }
 
-    public Player(PlayerProxy _playerProxy, double _startMoney, Game _game,InitialScreenController _controller,String _name)
+    public Player(PlayerProxy _playerProxy, double _startMoney, Game _game, Controller _controller, String _name)
     {
         playerProxy = _playerProxy;
         game=_game;
@@ -45,7 +51,7 @@ public class Player implements Runnable
        
     public void run()
     {
-    	while(!playerThread.interrupted())
+    	while(!Thread.interrupted())
     	{
 			try
 			{
@@ -57,12 +63,7 @@ public class Player implements Runnable
     	}
     }
     
-    private void quitGame()
-    {
-    	game.deletePlayer(playerId);
-    }
-
-    public void reportMessage(String message)
+    public void sendMessage(String message)
     {
         try 
         {
@@ -73,19 +74,21 @@ public class Player implements Runnable
             Logger.getLogger(Player.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
+    //processes recieved message
     public void processMessage(String message)
     {
+        //if the player wants to quit
     	if(message.equals(CommunicationCommands.QUIT_MESSAGE))
-    	{
     		quitGame();
-    	}
         else
+        //if the player wants to place a bet
         if(message.startsWith(CommunicationCommands.BET))
         {
             String[] parts=message.split(" ");
             if(game.isAcceptingBets())
             {
+                //if the user has insufficient balance
                 if(Double.parseDouble(parts[parts.length-1])>money)
                 {
                     try
@@ -96,11 +99,13 @@ public class Player implements Runnable
                 }
                 else
                 {
+                    //Adds a new bet and updates bet money amount
+
                     Bet newBet=Bets.decodeBet(parts[1] + " " + parts[2]);
                     game.sendBetToCroupier(playerId,newBet);
                     double bettedMoney=Double.parseDouble(parts[2]);
                     updateMoney(-bettedMoney);
-                    controller.updateBettedMoney(playerId,bettedMoney);
+                    controller.updateBettingMoney(playerId,bettedMoney);
                     try
                     {
                         playerProxy.send(CommunicationCommands.ACCEPT);
@@ -118,6 +123,7 @@ public class Player implements Runnable
             }
         }
         else
+        //if the user wants to check out his balance
         if(message.equals(CommunicationCommands.BALANCE))
         {
             try
@@ -136,8 +142,9 @@ public class Player implements Runnable
     	return playerId;
     }
 
-    public synchronized void updateMoney(double amount){
+    public synchronized void updateMoney(double amount)
+    {
         money += amount;
-        controller.updateBalaceMoney(playerId,money);
+        controller.updateBalanceMoney(playerId,money);
     }
 }

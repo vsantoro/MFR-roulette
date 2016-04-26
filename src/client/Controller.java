@@ -1,5 +1,8 @@
-package roulette_client;
+package client;
 
+import client.BoardView;
+import client.RoulettePlayer;
+import client.ServerSettingsView;
 import common.Bet;
 import common.Bets;
 import common.CommunicationCommands;

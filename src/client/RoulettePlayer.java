@@ -1,19 +1,13 @@
-package roulette_client;
+package client;
 
 
 import common.Bet;
-import common.Column;
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
-import javax.net.ssl.SSLContext;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import common.CommunicationCommands;
 

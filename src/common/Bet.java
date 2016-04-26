@@ -19,6 +19,7 @@ public abstract class Bet implements Cloneable
         amount = _amount;
     }
 
+    //makes a bet duplicate
     public Bet clone()
     {
         try {
@@ -27,5 +28,6 @@ public abstract class Bet implements Cloneable
         catch(CloneNotSupportedException er){return null;}
     }
 
+    //calculates winning amount, depending on the bet
     public abstract double winning(int number);
 }

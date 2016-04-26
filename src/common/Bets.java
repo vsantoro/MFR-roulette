@@ -1,9 +1,6 @@
 package common;
 
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 
 public class Bets
 {
@@ -11,6 +8,7 @@ public class Bets
 
 	private Bets() { }
 
+    //initialization of a static best array list
     static {
         bets.add( new Manque() );
         bets.add( new Passe() );
@@ -23,6 +21,7 @@ public class Bets
         bets.add(new Row());
     }
 
+    //Returns a clone object of one of the  existing bet objects, depending on the specified string
     public static Bet decodeBet(String str)
     {
         String []parts = str.split("\\s|_");

@@ -1,9 +1,6 @@
-package roulette_client;
+package client;
 
-/**
- * Created by Dragan Obradovic on 31-May-15.
- */
-public class MVC {
+public class ClientApplication {
 
     public static void main(String[] args) {
         RoulettePlayer roulettePlayer = new RoulettePlayer();
